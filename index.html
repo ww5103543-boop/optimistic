@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Optimistic — Cinnamon</title>
+<title>Optimistic</title>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&family=Noto+Mono&display=swap');
@@ -630,7 +630,7 @@
       <text x="50" y="56" text-anchor="middle" font-family="sans-serif" font-size="24" fill="#87b87f" font-weight="300">O</text>
     </svg>
     <h1>Optimistic</h1>
-    <p>CINNAMON EDITION</p>
+    <p>v1 <3</p>
   </div>
   <div class="boot-log" id="boot-log"></div>
   <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
@@ -652,7 +652,7 @@
         <text x="50" y="57" text-anchor="middle" font-family="sans-serif" font-size="28" fill="#87b87f" font-weight="bold">O</text>
       </svg>
       <h1>Optimistic</h1>
-      <p>CINNAMON EDITION</p>
+      <p>v1 <3</p>
     </div>
     <div class="login-options">
       <p class="login-label">Choose how to sign in</p>
@@ -885,7 +885,7 @@ const bootMessages = [
   { text: 'Mounting filesystems...', delay: 300, status: 'ok' },
   { text: 'Starting udev...', delay: 500, status: 'ok' },
   { text: 'Initializing network interfaces...', delay: 750, status: 'ok' },
-  { text: 'Loading Cinnamon desktop environment...', delay: 1000, status: 'ok' },
+  { text: 'Loading desktop environment...', delay: 1000, status: 'ok' },
   { text: 'Checking localStorage availability...', delay: 1300, status: 'ok' },
   { text: 'Loading user session manager...', delay: 1500, status: 'ok' },
 ];
@@ -1692,7 +1692,7 @@ function showOSDialog(title,defaultVal,callback){
 // ════════════════════════════════════════════
 function terminalContent(){
   return `<div class="terminal-body" id="term-body">
-    <div class="terminal-output" style="color:#5a8a52">Optimistic 21.3 Virginia — Cinnamon 6.0</div>
+    <div class="terminal-output" style="color:#5a8a52">Optimistic v1 <3</div>
     <div class="terminal-output" style="color:#4a7a42">Type <span style="color:#87b87f">help</span> for available commands.</div>
     <div class="terminal-output">&nbsp;</div>
   </div>
@@ -1715,12 +1715,12 @@ const termCmds = {
   uname:(args)=>args[0]==='-a'?'Linux optimistic 5.15.0-91-generic #101-Ubuntu SMP x86_64 GNU/Linux':'Linux',
   whoami:()=>currentUser?.name||'user',
   clear:()=>{document.getElementById('term-body').innerHTML='';return null;},
-  neofetch:()=>`<span style="color:#87b87f">         ..          </span> ${currentUser?.name||'user'}@optimistic\n       .PLTJ.        <span style="color:#87b87f">─────────────────</span>\n      &lt;CLT&gt;.6BU:      OS: Optimistic 21.3 Virginia\n     &lt;Cff;&lt;NNJy:     Kernel: 5.15.0-91-generic\n     ;:9&lt;;&amp;9 T&lt;:. .   Shell: bash 5.1.16\n     .&lt;;= T. .9&lt;. :    DE: Cinnamon 6.0\n      :..  ;=.;:     WM: Mutter (Muffin)\n           :&lt;       CPU: Intel i5-12400 @ 4.4GHz\n                     Memory: 3.1GiB / 16.0GiB\n                     Wisp: ${wispConnected?'Connected':'Disconnected'}`,
+  neofetch:()=>`<span style="color:#87b87f">         ..          </span> ${currentUser?.name||'user'}@optimistic\n       .PLTJ.        <span style="color:#87b87f">─────────────────</span>\n      &lt;CLT&gt;.6BU:      OS: Optimistic 21.3 Virginia\n     &lt;Cff;&lt;NNJy:     Kernel: 5.15.0-91-generic\n     ;:9&lt;;&amp;9 T&lt;:. .   Shell: bash 5.1.16\n     .&lt;;= T. .9&lt;. :    DE: v1 <3\n      :..  ;=.;:     WM: Mutter (Muffin)\n           :&lt;       CPU: Intel i5-12400 @ 4.4GHz\n                     Memory: 3.1GiB / 16.0GiB\n                     Wisp: ${wispConnected?'Connected':'Disconnected'}`,
   mkdir:(args)=>{if(!args[0])return'mkdir: missing operand';const tree=getFSTree();if(!tree[termCwd])tree[termCwd]=[];if(!tree[termCwd].includes(args[0]))tree[termCwd].push(args[0]);if(!tree[termCwd+'/'+args[0]])tree[termCwd+'/'+args[0]]=[];saveFSTree(tree);return'';},
   touch:(args)=>{if(!args[0])return'touch: missing operand';const tree=getFSTree();if(!tree[termCwd])tree[termCwd]=[];if(!tree[termCwd].includes(args[0]))tree[termCwd].push(args[0]);saveFSTree(tree);const prefix=OPT_FILES_PREFIX+(currentUser?.name||'anon')+'.';if(!localStorage.getItem(prefix+'file.'+termCwd+'/'+args[0]))saveFSFile(termCwd+'/'+args[0],'');return'';},
   rm:(args)=>{if(!args[0])return'rm: missing operand';const tree=getFSTree();if(tree[termCwd])tree[termCwd]=tree[termCwd].filter(i=>i!==args[0]);deleteFSFile(termCwd+'/'+args[0]);saveFSTree(tree);return'';},
   top:()=>`Tasks: 182 total, 1 running, 181 sleeping\nCPU: 3.2% us, 0.8% sy\nMem: 3200MiB / 16384MiB`,
-  ps:()=>`  PID TTY   STAT  TIME COMMAND\n  1   ?     Ss    0:01 /sbin/init\n  889 ?     Ssl   0:12 cinnamon --replace\n  1203 pts/0 Ss    0:00 bash\n  2041 pts/0 R+    0:00 ps`,
+  ps:()=>`  PID TTY   STAT  TIME COMMAND\n  1   ?     Ss    0:01 /sbin/init\n  889 ?     Ssl   0:12 v1 <3 --replace\n  1203 pts/0 Ss    0:00 bash\n  2041 pts/0 R+    0:00 ps`,
   df:()=>`Filesystem     1K-blocks    Used Available Use% Mounted on\n/dev/sda1      488386584 48291004 415268696  11% /`,
   free:()=>`              total    used    free   shared\nMem:       16777216  3276800 13500416    49152\nSwap:       8388608        0  8388608`,
   history:()=>terminalHistory.map((c,i)=>`  ${i+1}  ${c}`).join('\n'),
@@ -1901,7 +1901,7 @@ const SETTINGS_PAGES={
     <div class="settings-row"><div><label>Date Format</label></div><select class="settings-select" data-key="date-format" onchange="saveSettingsPage()"><option>MM/DD/YYYY</option><option>DD/MM/YYYY</option><option>YYYY-MM-DD</option></select></div>
     <div class="settings-row"><div><label>Time Format</label></div><select class="settings-select" data-key="time-format" onchange="saveSettingsPage()"><option>24-hour</option><option>12-hour</option></select></div>
     <div class="settings-row"><div><label>Auto Updates</label></div><div class="toggle on" data-key="auto-updates" onclick="this.classList.toggle('on');saveSettingsPage()"></div></div>
-    <div class="settings-row"><div><label>Version</label><small>Optimistic 21.3 Virginia — Cinnamon 6.0</small></div><button class="settings-btn" onclick="showNotif('Update Manager','System is up to date.')">Check Updates</button></div>
+    <div class="settings-row"><div><label>Version</label><small>Optimistic v1 <3</small></div><button class="settings-btn" onclick="showNotif('Update Manager','System is up to date.')">Check Updates</button></div>
   </div>`,
   'Privacy':()=>`<div class="settings-group"><h3>Privacy & Cookies</h3>
     <div class="settings-row"><div><label>Cookie Storage</label><small>localStorage for files and settings</small></div><span style="font-size:12px;color:${localStorage.getItem(OPT_COOKIES_KEY)==='accepted'?'var(--mint-green)':'#febc2e'}">${localStorage.getItem(OPT_COOKIES_KEY)==='accepted'?'Accepted':'Not accepted'}</span></div>
