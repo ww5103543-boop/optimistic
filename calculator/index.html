@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Calculator</title>
   <style>
     * {
@@ -12,9 +12,14 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
       background: transparent !important;
-      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    body {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -29,19 +34,22 @@
       border-radius: 28px;
       padding: 20px;
       width: 100%;
-      max-width: 380px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
 
     .display {
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       padding: 20px 16px;
       margin-bottom: 20px;
       text-align: right;
+      flex-shrink: 0;
     }
 
     .previous-operand {
@@ -69,12 +77,14 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
+      flex: 1;
+      min-height: 0;
     }
 
     .btn {
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 18px;
       padding: 16px 8px;
@@ -84,6 +94,9 @@
       cursor: pointer;
       transition: all 0.15s ease;
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .btn:hover {
@@ -122,10 +135,12 @@
       border-color: rgba(255, 100, 100, 0.3);
     }
 
-    @media (max-width: 420px) {
-      .calculator { padding: 16px; }
-      .btn { padding: 12px 6px; font-size: 18px; }
-      .current-operand { font-size: 36px; }
+    /* Responsive adjustments */
+    @media (max-width: 420px), (max-height: 600px) {
+      .calculator { padding: 12px; }
+      .display { padding: 12px 12px; margin-bottom: 12px; }
+      .btn { padding: 10px 4px; font-size: 18px; }
+      .current-operand { font-size: 32px; }
       .buttons { gap: 8px; }
     }
   </style>
