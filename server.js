@@ -1,6 +1,6 @@
 const http = require("http");
 const https = require("https");
-const ws = require("ws"); // Add this: npm install ws
+const ws = require("ws");
 const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
@@ -29,11 +29,12 @@ const server = http.createServer((req, res) => {
 
   if (urlPath === "/") urlPath = "/index.html";
   if (urlPath === "/games") urlPath = "/games.html";
-  if (urlPath === "/terminal") urlPath = "/terminal.html";
+  if (urlPath === "/terminal") urlPath = "/terminal/index.html";
 
   const rootAttempt = path.join(__dirname, urlPath);
   const appsAttempt = path.join(__dirname, "apps", urlPath);
   const lithiumAttempt = path.join(__dirname, "lithium-js", urlPath);
+  const terminalAttempt = path.join(__dirname, "terminal", urlPath.replace("/terminal/", ""));
 
   function serveFile(filePath) {
     const ext = path.extname(filePath).toLowerCase();
@@ -59,6 +60,15 @@ const server = http.createServer((req, res) => {
     }
     res.writeHead(200, headers);
     fs.createReadStream(filePath).pipe(res);
+  }
+
+  // Check for terminal files first
+  if (urlPath.startsWith("/terminal/")) {
+    const terminalFile = path.join(__dirname, "terminal", urlPath.replace("/terminal/", ""));
+    if (fs.existsSync(terminalFile) && fs.statSync(terminalFile).isFile()) {
+      serveFile(terminalFile);
+      return;
+    }
   }
 
   if (fs.existsSync(rootAttempt) && fs.statSync(rootAttempt).isFile()) {
@@ -95,14 +105,13 @@ wss.on("connection", (ws, req) => {
 
   console.log(`\x1b[32m✓\x1b[0m Terminal connected: ${sessionId}`);
 
-  // Send initial connection success
   ws.send(JSON.stringify({
     type: "ready",
     data: `Connected to Optimistic OS Terminal\nType 'help' for commands\n`
   }));
 
   // Spawn bash shell
-  shellProcess = spawn("/bin/bash", [], {
+  shellProcess = spawn(process.platform === "win32" ? "cmd.exe" : "/bin/bash", [], {
     cwd: currentDir,
     env: process.env,
     shell: true
@@ -139,7 +148,6 @@ wss.on("connection", (ws, req) => {
   ws.on("message", (message) => {
     const data = message.toString();
     
-    // Handle special commands
     if (data === "__GET_CWD__") {
       ws.send(JSON.stringify({
         type: "cwd",
@@ -153,7 +161,21 @@ wss.on("connection", (ws, req) => {
       try {
         process.chdir(newDir);
         currentDir = process.cwd();
-        shellProcess.cwd = currentDir;
+        if (shellProcess) {
+          shellProcess.kill();
+          shellProcess = spawn(process.platform === "win32" ? "cmd.exe" : "/bin/bash", [], {
+            cwd: currentDir,
+            env: process.env,
+            shell: true
+          });
+          // Reattach listeners
+          shellProcess.stdout.on("data", (d) => {
+            if (isAlive) ws.send(JSON.stringify({ type: "output", data: d.toString() }));
+          });
+          shellProcess.stderr.on("data", (d) => {
+            if (isAlive) ws.send(JSON.stringify({ type: "output", data: d.toString() }));
+          });
+        }
         ws.send(JSON.stringify({
           type: "cwd",
           data: currentDir
@@ -167,7 +189,6 @@ wss.on("connection", (ws, req) => {
       return;
     }
     
-    // Send command to shell
     if (shellProcess && shellProcess.stdin) {
       shellProcess.stdin.write(data + "\n");
     }
