@@ -882,12 +882,12 @@ let wispPingStart = 0;
 // ════════════════════════════════════════════
 const bootMessages = [
   { text: 'Loading kernel modules', delay: 0, status: 'ok' },
-  { text: 'Mounting filesystems', delay: 300, status: 'ok' },
-  { text: 'Starting udev', delay: 500, status: 'ok' },
-  { text: 'Initializing network interfaces', delay: 500, status: 'ok' },
-  { text: 'Loading desktop environment', delay: 650, status: 'ok' },
-  { text: 'Checking localStorage availability', delay: 1000, status: 'ok' },
-  { text: 'Loading user session manager', delay: 1150, status: 'ok' },
+  { text: 'Mounting filesystems', delay: 100, status: 'ok' },
+  { text: 'Starting udev', delay: 200, status: 'ok' },
+  { text: 'Initializing network interfaces', delay: 300, status: 'ok' },
+  { text: 'Loading desktop environment', delay: 400, status: 'ok' },
+  { text: 'Checking localStorage availability', delay: 500, status: 'ok' },
+  { text: 'Loading user session manager', delay: 600, status: 'ok' },
 ];
 
 function addBootLine(text, status, delay) {
@@ -952,13 +952,13 @@ async function runOSBootMessages(isNewLogin) {
   
   const osMessages = [
     { text: `Welcome back, ${currentUser?.name || 'user'}!`, status: 'ok', delay: 0 },
-    { text: 'Loading /calculator', status: 'wait', delay: 300 },
+    { text: 'Loading /calculator', status: 'wait', delay: 100 },
     { text: 'Calculator /calculator/', status: 'ok', delay: 500 },
-    { text: 'Loading Terminal (static sorry)', status: 'wait', delay: 650 },
-    { text: 'Terminal Ready', status: 'ok', delay: 750 },
-    { text: 'Loading browser (Scramjet)', status: 'wait', delay: 850 },
-    { text: 'Browser Ready', status: 'ok', delay: 1000 },
-    { text: 'Restoring user session', status: 'ok', delay: 1100 },
+    { text: 'Loading Terminal (static sorry)', status: 'wait', delay: 200 },
+    { text: 'Terminal Ready', status: 'ok', delay: 300 },
+    { text: 'Loading browser (Scramjet)', status: 'wait', delay: 400 },
+    { text: 'Browser Ready', status: 'ok', delay: 500 },
+    { text: 'Restoring user session', status: 'ok', delay: 600 },
   ];
   
   for(let i = 0; i < osMessages.length; i++) {
