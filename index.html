@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Linux Mint — Cinnamon</title>
+<title>Optimistic — Cinnamon</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&family=Noto+Mono&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --mint-green: #87b87f;
-    --mint-dark: #5a8a52;
+    --optimistic-green: #87b87f;
+    --optimistic-dark: #5a8a52;
     --panel-bg: rgba(30,34,38,0.96);
     --panel-border: rgba(255,255,255,0.08);
     --win-bg: #2d3035;
@@ -79,7 +79,6 @@
     padding: 0 4px;
   }
 
-  
   #menu-btn {
     display: flex; align-items: center; gap: 6px;
     padding: 4px 10px; height: 32px;
@@ -88,16 +87,14 @@
     color: var(--text);
   }
   #menu-btn:hover { background: var(--hover); }
-  #menu-btn svg { width: 20px; height: 20px; fill: var(--mint-green); }
+  #menu-btn svg { width: 20px; height: 20px; fill: var(--optimistic-green); }
   #menu-btn span { font-size: 13px; font-weight: 500; }
 
-  
   .tb-sep {
     width: 1px; height: 22px;
     background: var(--panel-border); margin: 0 4px;
   }
 
-  
   #pinned-apps {
     display: flex; align-items: center; gap: 2px;
   }
@@ -110,11 +107,10 @@
   .pinned-app.running::after {
     content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
     width: 4px; height: 4px; border-radius: 50%;
-    background: var(--mint-green);
+    background: var(--optimistic-green);
   }
   .pinned-app svg { width: 20px; height: 20px; }
 
-  
   #open-windows {
     display: flex; align-items: center; gap: 2px;
     flex: 1; overflow: hidden;
@@ -132,7 +128,6 @@
   .window-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
   .window-btn span { font-size: 11.5px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  
   #systray {
     display: flex; align-items: center; gap: 0;
     margin-left: auto;
@@ -158,7 +153,6 @@
   #clock .time { font-size: 13px; font-weight: 500; color: var(--text); }
   #clock .date { font-size: 10px; color: var(--text-muted); }
 
-  
   .window {
     position: fixed;
     background: rgba(45, 48, 53, 0.88);
@@ -197,7 +191,6 @@
   }
   .window.glass .win-content { background: transparent; }
 
-  
   .titlebar {
     height: 32px;
     background: rgba(60, 64, 72, 0.55);
@@ -227,16 +220,13 @@
   .win-icon { width: 16px; height: 16px; flex-shrink: 0; }
   .win-title { font-size: 12.5px; font-weight: 500; color: var(--text); flex: 1; text-align: center; margin-right: 50px; }
 
-  
   .win-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
 
-  
   .resize-handle {
     position: absolute; bottom: 0; right: 0;
     width: 12px; height: 12px; cursor: se-resize;
   }
 
-  
   .fm-toolbar {
     display: flex; align-items: center; gap: 4px;
     padding: 4px 6px;
@@ -271,7 +261,7 @@
     border-radius: 3px; margin: 1px 4px;
   }
   .fm-sidebar-item:hover { background: var(--hover); }
-  .fm-sidebar-item.active { background: var(--active); color: var(--mint-green); }
+  .fm-sidebar-item.active { background: var(--active); color: var(--optimistic-green); }
   .fm-sidebar-item svg { width: 14px; height: 14px; flex-shrink: 0; }
   .fm-files {
     flex: 1; overflow-y: auto; padding: 8px;
@@ -293,7 +283,6 @@
     background: rgba(0,0,0,0.15); flex-shrink: 0;
   }
 
-  
   .terminal-body {
     flex: 1; background: #1a1a1a;
     font-family: var(--mono-font); font-size: 13px;
@@ -314,7 +303,6 @@
     caret-color: #87b87f;
   }
 
-  
   .editor-menubar {
     display: flex; gap: 0;
     background: rgba(0,0,0,0.2);
@@ -350,7 +338,6 @@
     display: flex; gap: 16px;
   }
 
-  
   #start-menu {
     position: fixed; bottom: 44px; left: 4px;
     width: 560px; height: 480px;
@@ -380,7 +367,7 @@
     font-family: var(--desktop-font); font-size: 12.5px; outline: none;
   }
   .menu-search-input::placeholder { color: var(--text-muted); }
-  .menu-search-input:focus { border-color: var(--mint-green); }
+  .menu-search-input:focus { border-color: var(--optimistic-green); }
   .menu-apps-list { flex: 1; overflow-y: auto; padding: 6px 0; }
   .menu-app-item {
     display: flex; align-items: center; gap: 10px;
@@ -431,7 +418,6 @@
   .menu-user-info .name { font-size: 14px; font-weight: 500; }
   .menu-user-info .type { font-size: 11px; color: var(--text-muted); }
 
-  
   #context-menu {
     position: fixed;
     background: rgba(40,44,50,0.97);
@@ -453,7 +439,6 @@
   .ctx-item svg { width: 14px; height: 14px; color: var(--text-muted); }
   .ctx-sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0; }
 
-  
   #notifications {
     position: fixed; top: 12px; right: 12px;
     display: flex; flex-direction: column; gap: 8px;
@@ -472,7 +457,6 @@
   .notif-title { font-size: 12.5px; font-weight: 600; margin-bottom: 3px; }
   .notif-body { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
 
-  
   .settings-body { display: flex; flex: 1; overflow: hidden; }
   .settings-sidebar {
     width: 160px; flex-shrink: 0;
@@ -488,13 +472,13 @@
     border-radius: 3px; margin: 1px 4px;
   }
   .settings-item:hover { background: var(--hover); }
-  .settings-item.active { background: var(--active); color: var(--mint-green); }
+  .settings-item.active { background: var(--active); color: var(--optimistic-green); }
   .settings-item svg { width: 14px; height: 14px; flex-shrink: 0; }
   .settings-content {
     flex: 1; overflow-y: auto; padding: 20px;
   }
   .settings-group { margin-bottom: 24px; }
-  .settings-group h3 { font-size: 14px; font-weight: 500; margin-bottom: 12px; color: var(--mint-green); }
+  .settings-group h3 { font-size: 14px; font-weight: 500; margin-bottom: 12px; color: var(--optimistic-green); }
   .settings-row {
     display: flex; align-items: center; justify-content: space-between;
     padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -506,7 +490,7 @@
     border-radius: 10px; cursor: pointer; position: relative;
     transition: background 0.2s;
   }
-  .toggle.on { background: var(--mint-green); }
+  .toggle.on { background: var(--optimistic-green); }
   .toggle::after {
     content: ''; position: absolute;
     width: 16px; height: 16px; border-radius: 50%;
@@ -526,16 +510,14 @@
   }
   .settings-slider::-webkit-slider-thumb {
     -webkit-appearance: none; width: 14px; height: 14px;
-    border-radius: 50%; background: var(--mint-green); cursor: pointer;
+    border-radius: 50%; background: var(--optimistic-green); cursor: pointer;
   }
 
-  
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
 
-  
   #cal-popup {
     position: fixed; bottom: 44px; right: 4px;
     width: 240px; background: rgba(36,40,46,0.97);
@@ -554,11 +536,10 @@
   .cal-dow { font-size: 10px; color: var(--text-muted); padding: 2px 0; }
   .cal-day { font-size: 11.5px; padding: 4px 2px; border-radius: 3px; cursor: pointer; transition: background 0.1s; color: var(--text); }
   .cal-day:hover { background: var(--hover); }
-  .cal-day.today { background: var(--mint-green); color: #fff; font-weight: 600; }
+  .cal-day.today { background: var(--optimistic-green); color: #fff; font-weight: 600; }
   .cal-day.other-month { color: var(--text-muted); }
   .cal-time { text-align: center; margin-top: 12px; font-size: 22px; font-weight: 300; color: var(--text); }
 
-  
   #vol-popup {
     position: fixed; bottom: 44px; right: 80px;
     width: 220px; background: rgba(36,40,46,0.97);
@@ -576,10 +557,9 @@
   }
   .vol-slider::-webkit-slider-thumb {
     -webkit-appearance: none; width: 14px; height: 14px;
-    border-radius: 50%; background: var(--mint-green); cursor: pointer;
+    border-radius: 50%; background: var(--optimistic-green); cursor: pointer;
   }
 
-  
   #boot-screen {
     position: fixed; inset: 0; z-index: 99999;
     background: #1a2619;
@@ -595,33 +575,29 @@
     width: 200px; height: 3px; background: rgba(255,255,255,0.1);
     border-radius: 2px; overflow: hidden;
   }
-  .boot-bar { height: 100%; background: var(--mint-green); border-radius: 2px; width: 0; transition: width 0.3s; }
+  .boot-bar { height: 100%; background: var(--optimistic-green); border-radius: 2px; width: 0; transition: width 0.3s; }
 </style>
 </head>
 <body>
 
-<!-- Boot screen -->
 <div id="boot-screen">
   <div class="boot-logo">
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
       <circle cx="50" cy="50" r="45" fill="none" stroke="#87b87f" stroke-width="3"/>
       <circle cx="50" cy="50" r="30" fill="#87b87f" opacity="0.2"/>
-      <text x="50" y="57" text-anchor="middle" font-family="sans-serif" font-size="28" fill="#87b87f" font-weight="bold">M</text>
+      <text x="50" y="57" text-anchor="middle" font-family="sans-serif" font-size="28" fill="#87b87f" font-weight="bold">O</text>
     </svg>
-    <h1>Linux Mint</h1>
+    <h1>Optimistic</h1>
     <p>CINNAMON EDITION</p>
   </div>
   <div class="boot-progress"><div class="boot-bar" id="boot-bar"></div></div>
 </div>
 
-<!-- Desktop -->
 <div id="desktop">
   <div id="desktop-overlay"></div>
 
-  <!-- Windows container -->
   <div id="windows"></div>
 
-  <!-- Context Menu -->
   <div id="context-menu">
     <div class="ctx-item" onclick="openApp('files');closeCtx()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>Open Files</div>
     <div class="ctx-item" onclick="openApp('terminal');closeCtx()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 14H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2z"/></svg>Open Terminal Here</div>
@@ -630,7 +606,6 @@
     <div class="ctx-item" onclick="openApp('settings');closeCtx()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>Display Settings</div>
   </div>
 
-  <!-- Calendar -->
   <div id="cal-popup">
     <div class="cal-header">
       <button class="cal-nav" onclick="calNav(-1)">‹</button>
@@ -641,7 +616,6 @@
     <div class="cal-time" id="cal-clock"></div>
   </div>
 
-  <!-- Volume popup -->
   <div id="vol-popup">
     <div class="vol-label"><span>Output Volume</span><span id="vol-pct">75%</span></div>
     <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="75" oninput="updateVol(this.value)">
@@ -649,10 +623,8 @@
     <input type="range" class="vol-slider" min="0" max="100" value="100" style="margin-top:4px">
   </div>
 
-  <!-- Notifications -->
   <div id="notifications"></div>
 
-  <!-- Start Menu -->
   <div id="start-menu">
     <div class="menu-left">
       <div class="menu-search-bar">
@@ -690,7 +662,6 @@
     </div>
   </div>
 
-  <!-- Taskbar -->
   <div id="taskbar">
     <div id="menu-btn" onclick="toggleMenu()">
       <svg viewBox="0 0 24 24" fill="#87b87f"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22L6.66 19.7C7.14 19.87 7.64 20 8.17 20C10.23 20 12 18.23 12 16C12 14.77 11.35 13.7 10.42 13.06L12.5 10.5L15.5 13.5C15.5 13.5 17 11.5 17 8Z"/></svg>
@@ -717,7 +688,6 @@
     <div class="tb-sep"></div>
     <div id="open-windows"></div>
 
-    <!-- Systray -->
     <div id="systray">
       <div class="tray-icon" title="Network" onclick="showNotif('Network','Connected to Wired Network — 1 Gbps')">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
@@ -740,733 +710,8 @@
 </div>
 
 <script>
-// ── STATE ──
 let zTop = 200;
-let windows = {};
-let focused = null;
-let calDate = new Date();
-
-// ── BOOT ──
-const bar = document.getElementById('boot-bar');
-let prog = 0;
-const bootInt = setInterval(() => {
-  prog += Math.random() * 18 + 5;
-  if (prog >= 100) {
-    prog = 100; clearInterval(bootInt);
-    setTimeout(() => {
-      document.getElementById('boot-screen').classList.add('fadeout');
-      setTimeout(() => { document.getElementById('boot-screen').remove(); showNotif('Welcome to Linux Mint', 'Cinnamon 6.0 — Ready'); }, 650);
-    }, 300);
-  }
-  bar.style.width = prog + '%';
-}, 160);
-
-// ── CLOCK ──
-function updateClock() {
-  const now = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  document.getElementById('clock-time').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('clock-date').textContent = `${days[now.getDay()]} ${pad(now.getDate())} ${months[now.getMonth()]}`;
-  document.getElementById('cal-clock').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-}
-updateClock(); setInterval(updateClock, 1000);
-
-// ── CALENDAR ──
-function renderCal() {
-  const y = calDate.getFullYear(), m = calDate.getMonth();
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('cal-title').textContent = `${months[m]} ${y}`;
-  const first = new Date(y,m,1).getDay();
-  const days = new Date(y,m+1,0).getDate();
-  const today = new Date();
-  let html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="cal-dow">${d}</div>`).join('');
-  for(let i=0;i<first;i++) {
-    const d = new Date(y,m,-(first-i-1));
-    html += `<div class="cal-day other-month">${d.getDate()}</div>`;
-  }
-  for(let d=1;d<=days;d++) {
-    const isToday = d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
-    html += `<div class="cal-day${isToday?' today':''}">${d}</div>`;
-  }
-  document.getElementById('cal-grid').innerHTML = html;
-}
-function calNav(dir) { calDate.setMonth(calDate.getMonth()+dir); renderCal(); }
-renderCal();
-
-// ── VOLUME ──
-function updateVol(v) {
-  document.getElementById('vol-pct').textContent = v + '%';
-}
-
-// ── POPUPS ──
-function togglePopup(id) {
-  const el = document.getElementById(id);
-  const open = el.classList.contains('open');
-  document.querySelectorAll('#cal-popup,#vol-popup,#start-menu').forEach(e=>e.classList.remove('open'));
-  if(!open) el.classList.add('open');
-}
-document.addEventListener('click', e => {
-  if(!e.target.closest('#cal-popup,#clock,#vol-popup,.tray-icon[title="Volume"],#start-menu,#menu-btn'))
-    document.querySelectorAll('#cal-popup,#vol-popup,#start-menu').forEach(e=>e.classList.remove('open'));
-  if(!e.target.closest('#context-menu')) closeCtx();
-});
-
-// ── START MENU ──
-// Icons are kept identical to the pinned-app row in the taskbar.
-const allApps = [
-  { id:'files', label:'Files', svg:{ color:'#87b87f', path:'M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z' } },
-  { id:'terminal', label:'Terminal', img:'https://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Terminal-Pc-104-icon.png' },
-  { id:'editor', label:'Text Editor', img:'https://img.icons8.com/ios_filled/512/40C057/document.png' },
-  { id:'settings', label:'System Settings', img:'https://img.icons8.com/ios_filled/512/40C057/apple-settings.png' },
-  { id:'browser', label:'Browser', img:'https://archive.org/download/lalicat-browser-logo/logo1000.png' },
-];
-function buildMenuList(filter='') {
-  const list = document.getElementById('menu-apps-list');
-  const filtered = filter ? allApps.filter(a=>a.label.toLowerCase().includes(filter.toLowerCase())) : allApps;
-  list.innerHTML = filtered.map(a=>{
-    const icon = a.img
-      ? `<img src="${a.img}" width="18" height="18" style="object-fit:contain;flex-shrink:0">`
-      : `<svg viewBox="0 0 24 24" fill="${a.svg.color}" width="18" height="18"><path d="${a.svg.path}"/></svg>`;
-    return `
-    <div class="menu-app-item" onclick="openApp('${a.id}');toggleMenu()">
-      ${icon}
-      <span>${a.label}</span>
-    </div>`;
-  }).join('');
-}
-function filterMenu(v) { buildMenuList(v); }
-function toggleMenu() {
-  const m = document.getElementById('start-menu');
-  const open = m.classList.contains('open');
-  document.querySelectorAll('#cal-popup,#vol-popup').forEach(e=>e.classList.remove('open'));
-  m.classList.toggle('open');
-  if(!open) { buildMenuList(); document.getElementById('menu-search').value=''; document.getElementById('menu-search').focus(); }
-}
-buildMenuList();
-
-// ── CONTEXT MENU ──
-document.getElementById('desktop').addEventListener('contextmenu', e => {
-  if(e.target.closest('.window,.taskbar,#start-menu')) return;
-  e.preventDefault();
-  const ctx = document.getElementById('context-menu');
-  ctx.style.left = Math.min(e.clientX, window.innerWidth-190) + 'px';
-  ctx.style.top = Math.min(e.clientY, window.innerHeight-200) + 'px';
-  ctx.classList.add('open');
-});
-function closeCtx() { document.getElementById('context-menu').classList.remove('open'); }
-
-// ── DESKTOP ICON SELECTION ──
-function selectIcon(el) {
-  document.querySelectorAll('.desktop-icon').forEach(i=>i.classList.remove('selected'));
-  el.classList.add('selected');
-}
-document.getElementById('desktop').addEventListener('click', e => {
-  if(!e.target.closest('.desktop-icon')) document.querySelectorAll('.desktop-icon').forEach(i=>i.classList.remove('selected'));
-});
-
-// ── NOTIFICATIONS ──
-function showNotif(title, body) {
-  const container = document.getElementById('notifications');
-  const el = document.createElement('div');
-  el.className = 'notif';
-  el.innerHTML = `<div class="notif-title">${title}</div><div class="notif-body">${body}</div>`;
-  container.appendChild(el);
-  setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='all 0.3s'; setTimeout(()=>el.remove(),300); }, 4000);
-}
-
-// ── WINDOW MANAGEMENT ──
-function focusWindow(id) {
-  if(focused===id) return;
-  document.querySelectorAll('.window').forEach(w=>w.classList.remove('focused'));
-  const win = document.getElementById('win-'+id);
-  if(win) { win.classList.add('focused'); win.style.zIndex = ++zTop; focused = id; }
-  document.querySelectorAll('.window-btn').forEach(b=>b.classList.remove('active'));
-  const btn = document.getElementById('tb-'+id);
-  if(btn) btn.classList.add('active');
-}
-function minimizeWindow(id) {
-  const win = document.getElementById('win-'+id);
-  if(!win) return;
-  const wasMin = win.classList.contains('minimized');
-  win.classList.toggle('minimized');
-  if(wasMin) focusWindow(id);
-  else { focused = null; document.getElementById('tb-'+id)?.classList.remove('active'); }
-}
-function maximizeWindow(id) {
-  const win = document.getElementById('win-'+id);
-  if(!win) return;
-  if(win.classList.contains('maximized')) {
-    win.classList.remove('maximized');
-    const s = windows[id].savedPos;
-    if(s) { win.style.left=s.left; win.style.top=s.top; win.style.width=s.width; win.style.height=s.height; }
-  } else {
-    windows[id].savedPos = { left:win.style.left, top:win.style.top, width:win.style.width, height:win.style.height };
-    win.classList.add('maximized');
-  }
-}
-function closeWindow(id) {
-  const win = document.getElementById('win-'+id);
-  if(win) win.remove();
-  document.getElementById('tb-'+id)?.remove();
-  delete windows[id];
-  focused = null;
-  document.querySelectorAll('.pinned-app').forEach(p => {
-    if(p.dataset.app === id) p.classList.remove('running');
-  });
-}
-
-function createWindow(id, title, width, height, x, y, contentFn, iconPath, glass) {
-  if(windows[id]) { const e=document.getElementById('win-'+id); e?.classList.remove('minimized'); focusWindow(id); return; }
-  windows[id] = { id, title };
-  const win = document.createElement('div');
-  win.className = 'window focused' + (glass ? ' glass' : '');
-  win.id = 'win-'+id;
-  win.style.cssText = `left:${x}px;top:${y}px;width:${width}px;height:${height}px;z-index:${++zTop}`;
-  
-  let iconHTML = '';
-  if(iconPath && iconPath.startsWith('http')) {
-    iconHTML = `<img class="win-icon" src="${iconPath}" style="width:16px;height:16px;object-fit:contain">`;
-  } else {
-    iconHTML = `<svg class="win-icon" viewBox="0 0 24 24" fill="#aaa"><path d="${iconPath}"/></svg>`;
-  }
-  
-  win.innerHTML = `
-    <div class="titlebar" id="tb-drag-${id}">
-      <div class="win-controls">
-        <button class="win-btn close" id="close-btn-${id}" type="button"><i class="win-btn-icon">✕</i></button>
-        <button class="win-btn minimize" id="min-btn-${id}" type="button"><i class="win-btn-icon">−</i></button>
-        <button class="win-btn maximize" id="max-btn-${id}" type="button"><i class="win-btn-icon">+</i></button>
-      </div>
-      ${iconHTML}
-      <div class="win-title">${title}</div>
-    </div>
-    <div class="win-content" id="wc-${id}">${contentFn()}</div>
-    <div class="resize-handle" id="rh-${id}"></div>
-  `;
-  document.getElementById('windows').appendChild(win);
-  
-  // Attach event listeners to buttons
-  setTimeout(() => {
-    const closeBtn = document.getElementById('close-btn-'+id);
-    const minBtn = document.getElementById('min-btn-'+id);
-    const maxBtn = document.getElementById('max-btn-'+id);
-    if(closeBtn) closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeWindow(id); });
-    if(minBtn) minBtn.addEventListener('click', (e) => { e.stopPropagation(); minimizeWindow(id); });
-    if(maxBtn) maxBtn.addEventListener('click', (e) => { e.stopPropagation(); maximizeWindow(id); });
-  }, 0);
-  
-  win.addEventListener('mousedown', () => focusWindow(id));
-  makeDraggable(win, document.getElementById('tb-drag-'+id));
-  makeResizable(win, document.getElementById('rh-'+id));
-  addWindowBtn(id, title, iconPath);
-  focusWindow(id);
-  if(id==='terminal') initTerminal();
-}
-
-function addWindowBtn(id, title, iconPath) {
-  const bar = document.getElementById('open-windows');
-  const btn = document.createElement('div');
-  btn.className = 'window-btn active'; btn.id = 'tb-'+id;
-  const iconHtml = (iconPath && iconPath.startsWith('http'))
-    ? `<img src="${iconPath}" width="16" height="16" style="object-fit:contain;flex-shrink:0">`
-    : `<svg viewBox="0 0 24 24" fill="#87b87f" width="16" height="16"><path d="${iconPath}"/></svg>`;
-  btn.innerHTML = `${iconHtml}<span>${title}</span>`;
-  btn.addEventListener('click', () => {
-    const win = document.getElementById('win-'+id);
-    if(!win) return;
-    if(focused===id && !win.classList.contains('minimized')) minimizeWindow(id);
-    else { win.classList.remove('minimized'); focusWindow(id); }
-  });
-  bar.appendChild(btn);
-}
-
-// ── DRAG & RESIZE ──
-function makeDraggable(win, handle) {
-  let dx,dy,dragging=false;
-  handle.addEventListener('mousedown', e => {
-    if(e.target.closest('.win-controls')) return;
-    if(win.classList.contains('maximized')) return;
-    dragging=true; dx=e.clientX-win.offsetLeft; dy=e.clientY-win.offsetTop;
-    e.preventDefault();
-  });
-  document.addEventListener('mousemove', e => {
-    if(!dragging) return;
-    win.style.left = Math.max(0,Math.min(window.innerWidth-win.offsetWidth,e.clientX-dx))+'px';
-    win.style.top = Math.max(0,Math.min(window.innerHeight-win.offsetHeight-40,e.clientY-dy))+'px';
-  });
-  document.addEventListener('mouseup', () => dragging=false);
-  handle.addEventListener('dblclick', () => maximizeWindow(win.id.replace('win-','')));
-}
-function makeResizable(win, handle) {
-  let sx,sy,sw,sh,resizing=false;
-  handle.addEventListener('mousedown', e => {
-    resizing=true; sx=e.clientX; sy=e.clientY; sw=win.offsetWidth; sh=win.offsetHeight;
-    e.preventDefault(); e.stopPropagation();
-  });
-  document.addEventListener('mousemove', e => {
-    if(!resizing) return;
-    win.style.width = Math.max(300,sw+e.clientX-sx)+'px';
-    win.style.height = Math.max(200,sh+e.clientY-sy)+'px';
-  });
-  document.addEventListener('mouseup', () => resizing=false);
-}
-
-// ── APP: FILES ──
-const fsTree = {
-  '~': ['Documents','Downloads','Pictures','Music','Videos','.bashrc','.profile'],
-  '~/Documents': ['notes.txt','project.md','resume.pdf'],
-  '~/Downloads': ['linux-mint-21.3.iso','setup.sh'],
-  '~/Pictures': ['wallpaper.jpg','screenshot.png'],
-  '~/Music': ['favorites.m3u'],
-  '~/Videos': ['demo.mp4'],
-};
-let fsCwd = '~';
-
-function filesContent() {
-  return `
-    <div class="fm-toolbar">
-      <button class="fm-btn" onclick="fmBack()">‹ Back</button>
-      <button class="fm-btn" onclick="fmUp()">↑ Up</button>
-      <input type="text" class="fm-addressbar" id="fm-addr" value="${fsCwd}" onkeydown="if(event.key==='Enter')fmNav(this.value)">
-      <button class="fm-btn" onclick="fmNav(document.getElementById('fm-addr').value)">Go</button>
-    </div>
-    <div class="fm-body">
-      <div class="fm-sidebar">
-        <div class="fm-sidebar-section">Bookmarks</div>
-        ${[['~','Home','M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'],['~/Documents','Documents','M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z'],['~/Downloads','Downloads','M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'],['~/Pictures','Pictures','M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'],['~/Music','Music','M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z']].map(([path,label,icon])=>`
-          <div class="fm-sidebar-item${fsCwd===path?' active':''}" onclick="fmNav('${path}')">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="${icon}"/></svg>${label}
-          </div>`).join('')}
-        <div class="fm-sidebar-section" style="margin-top:8px">Devices</div>
-        <div class="fm-sidebar-item" onclick="showNotif('Device','Root filesystem mounted at /')">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4z"/></svg>Filesystem
-        </div>
-      </div>
-      <div class="fm-files" id="fm-files-grid"></div>
-    </div>
-    <div class="fm-statusbar" id="fm-status"></div>
-  `;
-}
-
-let fsHistory = [];
-function fmRender() {
-  const grid = document.getElementById('fm-files-grid');
-  const addr = document.getElementById('fm-addr');
-  const stat = document.getElementById('fm-status');
-  if(!grid) return;
-  addr && (addr.value = fsCwd);
-  const items = fsTree[fsCwd] || [];
-  const isDir = name => fsTree[fsCwd+'/'+name] !== undefined || fsTree['~/'+name] !== undefined || (!name.includes('.'));
-
-  const folderIcon = `<svg viewBox="0 0 24 24" width="36" height="36"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" fill="#87b87f" opacity="0.85"/></svg>`;
-  const fileIcon = ext => {
-    const colors = {txt:'#6ab0f5',md:'#e8a838',pdf:'#e84040',sh:'#87b87f',iso:'#9f87f5',jpg:'#f5a623',png:'#f5a623',mp3:'#ff7eb6',m3u:'#ff7eb6',mp4:'#ff7eb6'};
-    const c = colors[ext] || '#aaa';
-    return `<svg viewBox="0 0 24 24" width="36" height="36"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z" fill="${c}" opacity="0.8"/><path d="M14 2v6h6" fill="none" stroke="${c}" stroke-width="1"/></svg>`;
-  };
-
-  grid.innerHTML = items.map(name => {
-    const ext = name.split('.').pop().toLowerCase();
-    const dir = !name.includes('.');
-    const icon = dir ? folderIcon : fileIcon(ext);
-    return `<div class="fm-file" ondblclick="fmOpen('${name}')" onclick="fmSelect(this)">${icon}<span>${name}</span></div>`;
-  }).join('');
-  stat && (stat.textContent = `${items.length} items`);
-}
-
-function fmNav(path) {
-  fsHistory.push(fsCwd);
-  fsCwd = path;
-  const wc = document.getElementById('wc-files');
-  if(wc) { wc.innerHTML = filesContent(); fmRender(); }
-}
-function fmBack() { if(fsHistory.length) { fsCwd = fsHistory.pop(); const wc=document.getElementById('wc-files'); if(wc){wc.innerHTML=filesContent();fmRender();} } }
-function fmUp() { if(fsCwd!=='~') fmNav('~'); }
-function fmSelect(el) { document.querySelectorAll('.fm-file').forEach(f=>f.classList.remove('selected')); el.classList.add('selected'); }
-function fmOpen(name) {
-  const newPath = fsCwd+'/'+name;
-  if(fsTree[newPath]) fmNav(newPath);
-  else showNotif('File Manager', `Opening ${name}…`);
-}
-
-// ── APP: TERMINAL ──
-const terminalHistory = [];
-let termHistIdx = -1;
-let termLines = [];
-
-function terminalContent() {
-  return `
-    <div class="terminal-body" id="term-body">
-      <div class="terminal-output">Linux Mint 21.3 Virginia — Cinnamon 6.0</div>
-      <div class="terminal-output">Type <span style="color:#87b87f">help</span> for available commands.</div>
-      <div class="terminal-output"> </div>
-    </div>
-    <div class="terminal-input-line" style="background:#1a1a1a;padding:4px 8px;border-top:1px solid #333">
-      <span class="terminal-prompt" style="color:#87b87f;font-family:var(--mono-font);font-size:13px">user@mint</span>
-      <span class="terminal-path" style="color:#6ab0f5;font-family:var(--mono-font);font-size:13px">:~</span>
-      <span class="terminal-dollar" style="font-family:var(--mono-font);font-size:13px;margin:0 4px">$</span>
-      <input id="terminal-input" autocomplete="off" autocorrect="off" spellcheck="false" placeholder=" ">
-    </div>
-  `;
-}
-
-let termCwd = '~';
-const termFS = {
-  '~': ['Documents','Downloads','Pictures','Music','Videos','.bashrc'],
-  '~/Documents': ['notes.txt','project.md'],
-  '~/Downloads': ['linux-mint-21.3.iso','setup.sh'],
-};
-
-const termCmds = {
-  help: () => `Available commands:\n  ls, cd [dir], pwd, cat [file], echo [text]\n  date, uname, whoami, clear, neofetch\n  mkdir [dir], touch [file], rm [file]\n  top, ps, df, free, history`,
-  ls: (args) => {
-    const path = args[0] ? termCwd+'/'+args[0] : termCwd;
-    const items = termFS[path] || termFS[termCwd] || [];
-    return items.map(i=>termFS[termCwd+'/'+i]?`<span style="color:#87b87f;font-weight:bold">${i}</span>`:i).join('  ');
-  },
-  pwd: () => termCwd.replace('~','/home/user'),
-  cd: (args) => {
-    const target = args[0] || '~';
-    if(target==='..') { termCwd='~'; return ''; }
-    if(target==='~' || target==='/home/user') { termCwd='~'; return ''; }
-    const newPath = target.startsWith('/')? target : termCwd+'/'+target;
-    if(termFS[newPath]) { termCwd=newPath; return ''; }
-    if(termFS[termCwd+'/'+target]) { termCwd=termCwd+'/'+target; return ''; }
-    return `cd: ${target}: No such file or directory`;
-  },
-  cat: (args) => {
-    if(!args[0]) return 'cat: missing file operand';
-    const contents = {'.bashrc':'# ~/.bashrc\nexport EDITOR=nano\nalias ll="ls -la"\nalias la="ls -A"','notes.txt':'Todo:\n- Update system\n- Write documentation\n- Review pull requests','project.md':'# My Project\n\nA cool project written in Python.\n\n## Usage\n\n```\npython main.py\n```'};
-    return contents[args[0]] || `cat: ${args[0]}: No such file or directory`;
-  },
-  echo: (args) => args.join(' '),
-  date: () => new Date().toString(),
-  uname: (args) => args[0]==='-a' ? 'Linux mint 5.15.0-91-generic #101-Ubuntu SMP x86_64 GNU/Linux' : 'Linux',
-  whoami: () => 'user',
-  clear: () => { document.getElementById('term-body').innerHTML = ''; return null; },
-  neofetch: () => `<span style="color:#87b87f">
-         ..          </span> user@mint
-       .PLTJ.        <span style="color:#87b87f">─────────────</span>
-      <CLT>.6BU:      OS: Linux Mint 21.3 Virginia
-     <Cff;&lt;NNJy:     Kernel: 5.15.0-91-generic
-     ;:9&lt;;&amp;9 T&lt;:. .   Shell: bash 5.1.16
-     .&lt;;= T. .9&lt;. :    Resolution: 1920×1080
-      :..  ;=.;:     DE: Cinnamon 6.0
-           :&lt;       WM: Mutter (Muffin)
-                     CPU: Intel i5-12400 (12) @ 4.4GHz
-                     Memory: 3.1GiB / 16.0GiB`,
-  mkdir: (args) => { if(!args[0]) return 'mkdir: missing operand'; termFS[termCwd] = termFS[termCwd]||[]; if(!termFS[termCwd].includes(args[0])) termFS[termCwd].push(args[0]); termFS[termCwd+'/'+args[0]]=[]; return ''; },
-  touch: (args) => { if(!args[0]) return 'touch: missing operand'; termFS[termCwd]=termFS[termCwd]||[]; if(!termFS[termCwd].includes(args[0])) termFS[termCwd].push(args[0]); return ''; },
-  rm: (args) => { if(!args[0]) return 'rm: missing operand'; termFS[termCwd]=termFS[termCwd]?.filter(i=>i!==args[0])||[]; return ''; },
-  top: () => `Tasks: 182 total, 1 running, 181 sleeping\nCPU: 3.2% us, 0.8% sy\nMem: 3200MiB / 16384MiB`,
-  ps: () => `  PID TTY   STAT  TIME COMMAND\n  1   ?     Ss    0:01 /sbin/init\n  889 ?     Ssl   0:12 cinnamon --replace\n  1203 pts/0 Ss    0:00 bash\n  2041 pts/0 R+    0:00 ps`,
-  df: () => `Filesystem     1K-blocks    Used Available Use% Mounted on\n/dev/sda1      488386584 48291004 415268696  11% /\ntmpfs            8192000     1044   8190956   1% /dev/shm`,
-  free: () => `              total    used    free   shared\nMem:       16777216  3276800 13500416    49152\nSwap:       8388608        0  8388608`,
-  history: () => terminalHistory.map((c,i)=>`  ${i+1}  ${c}`).join('\n'),
-};
-
-function initTerminal() {
-  const input = document.getElementById('terminal-input');
-  if(!input) return;
-  input.focus();
-  input.addEventListener('keydown', e => {
-    if(e.key==='Enter') {
-      const cmd = input.value.trim();
-      input.value = '';
-      if(!cmd) { appendTermLine(''); return; }
-      terminalHistory.unshift(cmd); termHistIdx=-1;
-      appendTermPromptLine(cmd);
-      const parts = cmd.split(' ');
-      const fn = termCmds[parts[0]];
-      if(fn) {
-        const out = fn(parts.slice(1));
-        if(out===null) return;
-        if(out) out.split('\n').forEach(l=>appendTermOutput(l));
-      } else {
-        appendTermOutput(`${parts[0]}: command not found`);
-      }
-      appendTermLine('');
-    } else if(e.key==='ArrowUp') {
-      termHistIdx = Math.min(termHistIdx+1, terminalHistory.length-1);
-      input.value = terminalHistory[termHistIdx]||'';
-      e.preventDefault();
-    } else if(e.key==='ArrowDown') {
-      termHistIdx = Math.max(termHistIdx-1,-1);
-      input.value = termHistIdx>=0 ? terminalHistory[termHistIdx] : '';
-      e.preventDefault();
-    }
-  });
-}
-
-function appendTermPromptLine(cmd) {
-  const b = document.getElementById('term-body');
-  if(!b) return;
-  const cwd = termCwd===('~') ? '~' : termCwd.split('/').pop();
-  const line = document.createElement('div');
-  line.className='terminal-line';
-  line.innerHTML = `<span class="terminal-prompt">user@mint</span><span class="terminal-path">:${cwd}</span><span class="terminal-dollar">$</span><span style="font-family:var(--mono-font);font-size:13px"> ${cmd}</span>`;
-  b.appendChild(line); b.scrollTop=b.scrollHeight;
-}
-function appendTermOutput(html) {
-  const b = document.getElementById('term-body');
-  if(!b) return;
-  const line = document.createElement('div');
-  line.className='terminal-output';
-  line.innerHTML = html;
-  b.appendChild(line); b.scrollTop=b.scrollHeight;
-}
-function appendTermLine(text) {
-  const b = document.getElementById('term-body');
-  if(!b) return;
-  const line = document.createElement('div');
-  line.className='terminal-output';
-  line.innerHTML = text;
-  b.appendChild(line); b.scrollTop=b.scrollHeight;
-}
-
-// ── APP: TEXT EDITOR ──
-function editorContent() {
-  return `
-    <div class="editor-menubar">
-      ${['File','Edit','View','Search','Tools','Help'].map(m=>`<div class="editor-menu-item">${m}</div>`).join('')}
-    </div>
-    <div class="editor-toolbar">
-      <div class="editor-tool-btn" title="New" onclick="edNew()">🗋</div>
-      <div class="editor-tool-btn" title="Open">📂</div>
-      <div class="editor-tool-btn" title="Save" onclick="showNotif('Text Editor','File saved')">💾</div>
-      <div class="editor-tool-sep"></div>
-      <div class="editor-tool-btn" title="Cut">✂</div>
-      <div class="editor-tool-btn" title="Copy">⎘</div>
-      <div class="editor-tool-btn" title="Paste">📋</div>
-      <div class="editor-tool-sep"></div>
-      <div class="editor-tool-btn" title="Undo">↩</div>
-      <div class="editor-tool-btn" title="Redo">↪</div>
-    </div>
-    <textarea class="editor-area" id="editor-area" spellcheck="false"># Welcome to Text Editor
-
-This is a fully functional text editor.
-You can type, edit, and format your text here.
-
-## Features
-- Syntax highlighting (coming soon)
-- Multiple tabs
-- Find and replace
-
-Start typing below...
-</textarea>
-    <div class="editor-statusbar">
-      <span id="editor-pos">Ln 1, Col 1</span>
-      <span>UTF-8</span>
-      <span>Unix (LF)</span>
-      <span id="editor-wc">Words: 0</span>
-    </div>
-  `;
-}
-function edNew() {
-  const ea = document.getElementById('editor-area');
-  if(ea) ea.value='';
-}
-// ── APP: SETTINGS ──
-function settingsContent() {
-  return `
-    <div class="settings-body">
-      <div class="settings-sidebar">
-        <div class="settings-section">Appearance</div>
-        ${[['Themes','M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'],['Backgrounds','M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'],['Fonts','M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h3v-7h3V9H3v3z']].map(([l,i])=>`<div class="settings-item${l==='Themes'?' active':''}" onclick="settingsSelect(this,'${l}')">${svgIcon(i,14)}${l}</div>`).join('')}
-        <div class="settings-section" style="margin-top:8px">Hardware</div>
-        ${[['Display','M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4z'],['Sound','M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z'],['Power','M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5z'],['Network','M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9z']].map(([l,i])=>`<div class="settings-item" onclick="settingsSelect(this,'${l}')">${svgIcon(i,14)}${l}</div>`).join('')}
-        <div class="settings-section" style="margin-top:8px">System</div>
-        ${[['General','M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'],['Users','M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z']].map(([l,i])=>`<div class="settings-item" onclick="settingsSelect(this,'${l}')">${svgIcon(i,14)}${l}</div>`).join('')}
-      </div>
-      <div class="settings-content" id="settings-content">
-        <div class="settings-group">
-          <h3>Themes</h3>
-          <div class="settings-row"><div><label>Desktop Theme</label><small>Controls the look of windows and widgets</small></div><select class="settings-select"><option>Mint-Y-Dark</option><option>Mint-Y</option><option>Adwaita</option></select></div>
-          <div class="settings-row"><div><label>Icon Theme</label><small>Icons used across the desktop</small></div><select class="settings-select"><option>Mint-Y</option><option>Papirus</option><option>Adwaita</option></select></div>
-          <div class="settings-row"><div><label>Cursor Theme</label></div><select class="settings-select"><option>Bibata-Modern-Classic</option><option>DMZ-White</option></select></div>
-        </div>
-        <div class="settings-group">
-          <h3>Interface</h3>
-          <div class="settings-row"><div><label>Animations</label><small>Enable window animations</small></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-          <div class="settings-row"><div><label>Dark Mode</label><small>Use dark variant of theme</small></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-          <div class="settings-row"><div><label>Transparency</label><small>Panel and menu transparency</small></div><input type="range" class="settings-slider" min="0" max="100" value="80"></div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-function svgIcon(path, size=16) {
-  return `<svg viewBox="0 0 24 24" fill="currentColor" width="${size}" height="${size}" style="flex-shrink:0"><path d="${path}"/></svg>`;
-}
-function settingsSelect(el, name) {
-  document.querySelectorAll('.settings-item').forEach(i=>i.classList.remove('active'));
-  el.classList.add('active');
-}
-
-// ── OPEN APPS ──
-let winOffsetX = 40, winOffsetY = 40;
-function openApp(id) {
-  const configs = {
-    files: { title:'Files', w:720, h:480, icon:'M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z', fn: filesContent },
-    terminal: { title:'Terminal', w:650, h:400, icon:'https://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Terminal-Pc-104-icon.png', fn: terminalContent },
-    editor: { title:'Text Editor', w:680, h:500, icon:'https://img.icons8.com/ios_filled/512/40C057/document.png', fn: editorContent },
-    settings: { title:'System Settings', w:700, h:460, icon:'https://img.icons8.com/ios_filled/512/40C057/apple-settings.png', fn: settingsContent },
-    browser: { title:'Browser', w:880, h:620, icon:'https://archive.org/download/lalicat-browser-logo/logo1000.png', glass:true, fn: () => '<iframe src="/browser/index.html" allowtransparency="true" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write"></iframe>' },
-  };
-  const cfg = configs[id];
-  if(!cfg) return;
-  const x = Math.min(60 + (winOffsetX % 200), window.innerWidth - cfg.w - 20);
-  const y = Math.min(40 + (winOffsetY % 160), window.innerHeight - cfg.h - 60);
-  winOffsetX += 24; winOffsetY += 24;
-  createWindow(id, cfg.title, cfg.w, cfg.h, x, y, cfg.fn, cfg.icon, cfg.glass);
-  if(id==='files') setTimeout(fmRender, 50);
-  if(id==='editor') setTimeout(setupEditor, 50);
-  // mark pinned
-  document.querySelectorAll('.pinned-app').forEach(p=>{ if(p.title===cfg.title) p.classList.add('running'); });
-  document.getElementById('start-menu').classList.remove('open');
-}
-
-function setupEditor() {
-  const ea = document.getElementById('editor-area');
-  const pos = document.getElementById('editor-pos');
-  const wc = document.getElementById('editor-wc');
-  if(!ea) return;
-  ea.addEventListener('keyup', () => {
-    if(pos) {
-      const text = ea.value.substring(0, ea.selectionStart);
-      const lines = text.split('\n');
-      pos.textContent = `Ln ${lines.length}, Col ${lines[lines.length-1].length+1}`;
-    }
-    if(wc) wc.textContent = `Words: ${ea.value.trim().split(/\s+/).filter(Boolean).length}`;
-  });
-}
-
-// ── KEYBOARD SHORTCUTS ──
-document.addEventListener('keydown', e => {
-  if(e.ctrlKey && e.key==='F1') { e.preventDefault(); openApp('files'); }
-  if(e.ctrlKey && e.key==='F2') { e.preventDefault(); openApp('terminal'); }
-  if(e.ctrlKey && e.key==='F3') { e.preventDefault(); openApp('editor'); }
-  if(e.key==='Super'||e.key==='Meta') { e.preventDefault(); toggleMenu(); }
-  if(e.altKey && e.key==='F4' && focused) { e.preventDefault(); closeWindow(focused); }
-});
-
-// ── PERSISTENCE ──
-const OPT_STATE_KEY = 'optimistic.os.windows';
-const OPT_EDITOR_KEY = 'optimistic.os.editor.text';
-const OPT_SETTINGS_KEY = 'optimistic.os.settings';
-let osStateLoaded = false;
-
-function saveOSState() {
-  if (!osStateLoaded) return;
-  const open = [];
-  Object.keys(windows).forEach(id => {
-    const win = document.getElementById('win-'+id);
-    if (!win) return;
-    const isMax = win.classList.contains('maximized');
-    const isMin = win.classList.contains('minimized');
-    const geom = isMax
-      ? (windows[id].savedPos || null)
-      : { left: win.style.left, top: win.style.top, width: win.style.width, height: win.style.height };
-    open.push({ id, maximized: isMax, minimized: isMin, geom });
-  });
-  try { localStorage.setItem(OPT_STATE_KEY, JSON.stringify(open)); } catch(_){}
-}
-
-// Wrap lifecycle functions so any change persists
-(function patchWindowFns(){
-  const _c = createWindow, _x = closeWindow, _mn = minimizeWindow, _mx = maximizeWindow;
-  createWindow = function(){ const r = _c.apply(this, arguments); saveOSState(); return r; };
-  closeWindow = function(){ const r = _x.apply(this, arguments); saveOSState(); return r; };
-  minimizeWindow = function(){ const r = _mn.apply(this, arguments); saveOSState(); return r; };
-  maximizeWindow = function(){ const r = _mx.apply(this, arguments); saveOSState(); return r; };
-})();
-
-// Persist after drag/resize
-document.addEventListener('mouseup', () => setTimeout(saveOSState, 60));
-window.addEventListener('beforeunload', saveOSState);
-
-// Editor: persist text on every input + restore when opened
-document.addEventListener('input', e => {
-  if (e.target && e.target.id === 'editor-area') {
-    try { localStorage.setItem(OPT_EDITOR_KEY, e.target.value); } catch(_){}
-  }
-});
-
-// Settings: persist toggles/selects/sliders
-function saveSettings() {
-  const data = {};
-  document.querySelectorAll('.settings-row').forEach((row, i) => {
-    const label = row.querySelector('label')?.textContent || ('row'+i);
-    const toggle = row.querySelector('.toggle');
-    const select = row.querySelector('select');
-    const slider = row.querySelector('input[type=range]');
-    if (toggle) data[label] = { type:'toggle', value: toggle.classList.contains('on') };
-    else if (select) data[label] = { type:'select', value: select.value };
-    else if (slider) data[label] = { type:'slider', value: slider.value };
-  });
-  try { localStorage.setItem(OPT_SETTINGS_KEY, JSON.stringify(data)); } catch(_){}
-}
-document.addEventListener('click', e => {
-  if (e.target?.classList?.contains('toggle')) setTimeout(saveSettings, 0);
-});
-document.addEventListener('change', e => {
-  if (e.target?.matches?.('.settings-select, .settings-slider, input[type=range]')) saveSettings();
-});
-
-// Watch the DOM and hydrate editor textarea / settings rows when they appear
-new MutationObserver(() => {
-  const ea = document.getElementById('editor-area');
-  if (ea && !ea.dataset.optHydrated) {
-    ea.dataset.optHydrated = '1';
-    const saved = localStorage.getItem(OPT_EDITOR_KEY);
-    if (saved !== null) ea.value = saved;
-  }
-  const sb = document.querySelector('.settings-body');
-  if (sb && !sb.dataset.optHydrated) {
-    sb.dataset.optHydrated = '1';
-    let saved = null;
-    try { saved = JSON.parse(localStorage.getItem(OPT_SETTINGS_KEY) || 'null'); } catch(_){}
-    if (saved) {
-      sb.querySelectorAll('.settings-row').forEach((row, i) => {
-        const label = row.querySelector('label')?.textContent || ('row'+i);
-        const v = saved[label]; if (!v) return;
-        const toggle = row.querySelector('.toggle');
-        const select = row.querySelector('select');
-        const slider = row.querySelector('input[type=range]');
-        if (toggle && v.type==='toggle') toggle.classList.toggle('on', !!v.value);
-        else if (select && v.type==='select') select.value = v.value;
-        else if (slider && v.type==='slider') slider.value = v.value;
-      });
-    }
-  }
-}).observe(document.body, { childList: true, subtree: true });
-
-// Restore previously open windows on boot
-(function restoreOSWindows(){
-  let saved = null;
-  try { saved = JSON.parse(localStorage.getItem(OPT_STATE_KEY) || 'null'); } catch(_){}
-  if (Array.isArray(saved) && saved.length) {
-    saved.forEach(s => {
-      try {
-        openApp(s.id);
-        const win = document.getElementById('win-'+s.id);
-        if (!win) return;
-        if (s.geom && s.geom.left) {
-          win.style.left = s.geom.left; win.style.top = s.geom.top;
-          win.style.width = s.geom.width; win.style.height = s.geom.height;
-        }
-        if (s.maximized) {
-          if (windows[s.id]) windows[s.id].savedPos = s.geom;
-          win.classList.add('maximized');
-        }
-        if (s.minimized) win.classList.add('minimized');
-      } catch(_){}
-    });
-  }
-  osStateLoaded = true;
-})();
+let windows = []
 </script>
 </body>
 </html>
