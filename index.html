@@ -952,14 +952,13 @@ async function runOSBootMessages(isNewLogin) {
   
   const osMessages = [
     { text: `Welcome back, ${currentUser?.name || 'user'}!`, status: 'ok', delay: 0 },
-    { text: 'Loading /calculator to filesystem...', status: 'wait', delay: 200 },
-    { text: 'Calculator module registered at /calculator/index.html', status: 'ok', delay: 500 },
-    { text: 'Loading terminal emulator...', status: 'wait', delay: 700 },
-    { text: 'Terminal ready (bash 5.1.16 compatible)', status: 'ok', delay: 1000 },
-    { text: 'Loading browser (Lalicat engine)...', status: 'wait', delay: 1200 },
-    { text: 'Browser sandboxed and ready', status: 'ok', delay: 1500 },
-    { text: 'Restoring user session...', status: 'ok', delay: 1700 },
-    { text: 'Desktop ready.', status: 'ok', delay: 1900 },
+    { text: 'Loading /calculator', status: 'wait', delay: 200 },
+    { text: 'Calculator /calculator/', status: 'ok', delay: 500 },
+    { text: 'Loading Terminal (static sorry)', status: 'wait', delay: 650 },
+    { text: 'Terminal Ready', status: 'ok', delay: 1000 },
+    { text: 'Loading browser (Scramjet)', status: 'wait', delay: 1150 },
+    { text: 'Browser sandboxed and ready', status: 'ok', delay: 1200 },
+    { text: 'Restoring user session', status: 'ok', delay: 1400 },
   ];
   
   for(let i = 0; i < osMessages.length; i++) {
