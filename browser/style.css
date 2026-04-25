@@ -1,540 +1,942 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-:root {
-  --bg: transparent;
-  --chrome-bg: transparent;
-  --chrome-border: rgba(255, 255, 255, 0.15);
-  --tab-bg: rgba(0, 0, 0, 0.25);
-  --tab-active-bg: rgba(255, 255, 255, 0.12);
-  --tab-active-border: rgba(255, 255, 255, 0.25);
-  --text: rgba(255, 255, 255, 0.7);
-  --text-dim: rgba(255, 255, 255, 0.4);
-  --text-bright: rgba(255, 255, 255, 0.95);
-}
-
-body {
-  background: transparent;
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-body.fullscreen-mode {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: transparent;
-}
-
-body.fullscreen-mode #tab-container,
-body.fullscreen-mode #toolbar {
-  display: none;
-}
-
-body.fullscreen-mode #web-container {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-}
-
-#exit-fullscreen-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 80px;
-  height: 80px;
-  z-index: 10001;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-}
-
-body.fullscreen-mode #exit-fullscreen-overlay {
-  pointer-events: auto;
-}
-
-#exit-fullscreen-overlay:hover {
-  opacity: 1;
-}
-
-#exit-fullscreen-btn {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 36px;
-  height: 36px;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-#exit-fullscreen-btn:hover {
-  background: rgba(0, 0, 0, 0.6);
-  transform: scale(1.05);
-}
-
-#tab-container {
-  background: transparent;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 6px 8px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  overflow-x: auto;
-  flex-shrink: 0;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  padding: 0 12px;
-  height: 34px;
-  min-width: 130px;
-  cursor: pointer;
-  user-select: none;
-  transition: all 0.15s;
-}
-
-.tab.active {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.tab.active .tab-title {
-  color: white;
-}
-
-.tab-title {
-  flex: 1;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* TAB ICON COMPLETELY REMOVED - NO MORE CIRCLE */
-.tab-icon {
-  display: none;
-}
-
-.tab-close {
-  width: 21px;
-  height: 21px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  font-size: 12px;
-  cursor: pointer;
-  flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.tab-close:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-}
-
-#new-tab-btn {
-  width: 25px;
-  height: 25px;
-  background: transparent;
-  border: none;
-  border-radius: 5px;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-#new-tab-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-#toolbar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  background: transparent;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
-}
-
-.nav-icon {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  border-radius: 7px;
-  color: rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.nav-icon:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-#url-wrapper {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 9px;
-  padding: 0 12px;
-  gap: 7px;
-}
-
-#url-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 13px;
-  padding: 7px 0;
-}
-
-#url-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-#url-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-#url-wrapper .loading-icon {
-  animation: spin 0.45s linear infinite;
-  opacity: 1;
-  transition: opacity 0.2s;
-  color: white;
-}
-
-#url-wrapper .loading-icon.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-#fullscreen-btn {
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border: none;
-  border-radius: 7px;
-  color: rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-
-#fullscreen-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-#menu-dots {
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-#web-container {
-  flex: 1;
-  position: relative;
-  background: transparent;
-  overflow: hidden;
-  min-height: 0;
-}
-
-.new-tab-page {
-  position: absolute;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.new-tab-page.active {
-  display: flex;
-}
-
-.nt-greeting {
-  font-size: 32px;
-  font-weight: 600;
-  background: linear-gradient(135deg, #ffffff, #aaaaaa);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-}
-
-.nt-search-area {
-  width: 80%;
-  max-width: 500px;
-  margin-top: 20px;
-}
-
-.nt-search {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 44px;
-  padding: 12px 20px;
-  color: white;
-  font-size: 14px;
-  outline: none;
-}
-
-.nt-search::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.nt-search:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(0, 0, 0, 0.45);
-}
-
-.browser-frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: none;
-  background: transparent;
-}
-
-.browser-frame.active {
-  display: block;
-}
-
-#dropdown-menu {
-  position: fixed;
-  top: 92px;
-  right: 12px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 11px;
-  padding: 5px;
-  min-width: 200px;
-  z-index: 2000;
-  display: none;
-}
-
-#dropdown-menu.open {
-  display: block;
-}
-
-.dd-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 7px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  width: 100%;
-  background: transparent;
-  border: none;
-}
-
-.dd-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.dd-sub {
-  margin-left: auto;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.dd-sep {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 4px 0;
-}
-
-.modal-bg {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 3000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-bg.open {
-  display: flex;
-}
-
-.modal-card {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 28px;
-  padding: 28px;
-  width: 340px;
-}
-
-.modal-card h3 {
-  color: white;
-  margin-bottom: 20px;
-  font-weight: 500;
-}
-
-.settings-row {
-  margin-bottom: 20px;
-}
-
-.settings-row label {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
-  display: block;
-  margin-bottom: 6px;
-}
-
-.settings-row input,
-.settings-row select {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 10px 14px;
-  color: white;
-  font-family: monospace;
-  outline: none;
-}
-
-.settings-row input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.settings-row select {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.settings-row select option {
-  background: #1a1a1a;
-  color: white;
-}
-
-.modal-buttons {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.modal-btn {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px;
-  border-radius: 30px;
-  color: white;
-  cursor: pointer;
-}
-
-.modal-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.toast-msg {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 8px 20px;
-  border-radius: 40px;
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-  z-index: 4000;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  white-space: nowrap;
-}
-
-.toast-msg.show {
-  opacity: 1;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Orion Flow · Glass Browser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: transparent;
+            --chrome-bg: transparent;
+            --chrome-border: rgba(255, 255, 255, 0.15);
+            --tab-bg: rgba(0, 0, 0, 0.25);
+            --tab-active-bg: rgba(255, 255, 255, 0.12);
+            --tab-active-border: rgba(255, 255, 255, 0.25);
+            --text: rgba(255, 255, 255, 0.7);
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --text-bright: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            background: transparent;
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        body.fullscreen-mode {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: transparent;
+        }
+
+        body.fullscreen-mode #tab-container,
+        body.fullscreen-mode #toolbar {
+            display: none;
+        }
+
+        body.fullscreen-mode #web-container {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+        }
+
+        #exit-fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            z-index: 10001;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        body.fullscreen-mode #exit-fullscreen-overlay {
+            pointer-events: auto;
+        }
+
+        #exit-fullscreen-overlay:hover {
+            opacity: 1;
+        }
+
+        #exit-fullscreen-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #exit-fullscreen-btn:hover {
+            background: rgba(0, 0, 0, 0.6);
+            transform: scale(1.05);
+        }
+
+        #tab-container {
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 0 12px;
+            height: 34px;
+            min-width: 130px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab.active .tab-title {
+            color: white;
+        }
+
+        .tab-title {
+            flex: 1;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* TAB ICON STYLES - REVIVED: website icons now visible */
+        .tab-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        /* default fallback icon: global/globe look (if no favicon) */
+        .tab-icon.default-icon {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.55)'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E");
+            background-size: 70%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 20px;
+        }
+
+        .tab-icon.loading-icon-tab {
+            animation: spinFav 0.65s linear infinite;
+        }
+
+        @keyframes spinFav {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .tab-close {
+            width: 21px;
+            height: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .tab-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        #new-tab-btn {
+            width: 25px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            border-radius: 5px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        #new-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        #toolbar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: transparent;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .nav-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 7px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        #url-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 9px;
+            padding: 0 12px;
+            gap: 7px;
+        }
+
+        #url-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 13px;
+            padding: 7px 0;
+        }
+
+        #url-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #url-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #url-wrapper .loading-icon {
+            animation: spin 0.45s linear infinite;
+            opacity: 1;
+            transition: opacity 0.2s;
+            color: white;
+        }
+
+        #url-wrapper .loading-icon.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #fullscreen-btn {
+            width: 30px;
+            height: 30px;
+            background: transparent;
+            border: none;
+            border-radius: 7px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        #fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        #menu-dots {
+            width: 30px;
+            height: 30px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        #web-container {
+            flex: 1;
+            position: relative;
+            background: transparent;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .new-tab-page {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .new-tab-page.active {
+            display: flex;
+        }
+
+        .nt-greeting {
+            font-size: 32px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ffffff, #aaaaaa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nt-search-area {
+            width: 80%;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+
+        .nt-search {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 44px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .nt-search::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .nt-search:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .browser-frame {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+            background: transparent;
+        }
+
+        .browser-frame.active {
+            display: block;
+        }
+
+        #dropdown-menu {
+            position: fixed;
+            top: 92px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 11px;
+            padding: 5px;
+            min-width: 200px;
+            z-index: 2000;
+            display: none;
+        }
+
+        #dropdown-menu.open {
+            display: block;
+        }
+
+        .dd-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 7px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            width: 100%;
+            background: transparent;
+            border: none;
+        }
+
+        .dd-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dd-sub {
+            margin-left: auto;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .dd-sep {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 4px 0;
+        }
+
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-bg.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 28px;
+            width: 340px;
+        }
+
+        .modal-card h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .settings-row {
+            margin-bottom: 20px;
+        }
+
+        .settings-row label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .settings-row input,
+        .settings-row select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 10px 14px;
+            color: white;
+            font-family: monospace;
+            outline: none;
+        }
+
+        .settings-row input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .settings-row select {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .settings-row select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .modal-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            z-index: 4000;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            white-space: nowrap;
+        }
+
+        .toast-msg.show {
+            opacity: 1;
+        }
+
+        /* minor scroll adjustment */
+        ::-webkit-scrollbar {
+            height: 2px;
+            width: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="exit-fullscreen-overlay"><div id="exit-fullscreen-btn">✕</div></div>
+    <div id="tab-container"></div>
+    <div id="toolbar">
+        <button class="nav-icon" id="back-btn">←</button>
+        <button class="nav-icon" id="forward-btn">→</button>
+        <button class="nav-icon" id="refresh-btn">↻</button>
+        <div id="url-wrapper">
+            <span id="url-loading-icon" class="loading-icon hidden">◌</span>
+            <input type="text" id="url-input" placeholder="Search or enter web address">
+        </div>
+        <button id="fullscreen-btn">⛶</button>
+        <button id="menu-dots">⋯</button>
+    </div>
+    <div id="web-container">
+        <div class="new-tab-page" id="new-tab-page">
+            <div class="nt-greeting">floating browser</div>
+            <div class="nt-search-area"><input type="text" class="nt-search" id="nt-search-input" placeholder="Search Google or type URL"></div>
+        </div>
+    </div>
+    <div id="dropdown-menu">
+        <button class="dd-item" id="settings-btn">⚙️ Settings</button>
+        <div class="dd-sep"></div>
+        <button class="dd-item" id="about-btn">ℹ️ About</button>
+    </div>
+    <div id="settings-modal" class="modal-bg">
+        <div class="modal-card">
+            <h3>Preferences</h3>
+            <div class="settings-row"><label>Homepage</label><input type="text" id="homepage-input" placeholder="https://google.com"></div>
+            <div class="settings-row"><label>Search Engine</label><select id="search-engine"><option value="google">Google</option><option value="bing">Bing</option><option value="ddg">DuckDuckGo</option></select></div>
+            <div class="modal-buttons"><button class="modal-btn" id="save-settings">Save</button><button class="modal-btn" id="close-settings">Cancel</button></div>
+        </div>
+    </div>
+    <div id="toast-msg" class="toast-msg"></div>
+    <script>
+        (function(){
+            let tabs = [];
+            let activeTabId = null;
+            let nextId = 1;
+            const tabContainer = document.getElementById('tab-container');
+            const webContainer = document.getElementById('web-container');
+            const urlInput = document.getElementById('url-input');
+            const loadingIcon = document.getElementById('url-loading-icon');
+            const backBtn = document.getElementById('back-btn');
+            const forwardBtn = document.getElementById('forward-btn');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const newTabBtn = document.getElementById('new-tab-btn');
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const menuDots = document.getElementById('menu-dots');
+            const dropdown = document.getElementById('dropdown-menu');
+            const settingsModal = document.getElementById('settings-modal');
+            const homepageInput = document.getElementById('homepage-input');
+            const searchEngineSelect = document.getElementById('search-engine');
+            const ntSearchInput = document.getElementById('nt-search-input');
+            let homepage = localStorage.getItem('orion_homepage') || 'https://www.google.com';
+            let searchEngine = localStorage.getItem('orion_search') || 'google';
+
+            function saveSettingsPersist(){
+                localStorage.setItem('orion_homepage', homepage);
+                localStorage.setItem('orion_search', searchEngine);
+            }
+
+            function getSearchUrl(query){
+                const q = encodeURIComponent(query);
+                if(searchEngine === 'google') return `https://www.google.com/search?q=${q}`;
+                if(searchEngine === 'bing') return `https://www.bing.com/search?q=${q}`;
+                return `https://duckduckgo.com/?q=${q}`;
+            }
+
+            function showToast(msg, duration=1800){
+                const toast = document.getElementById('toast-msg');
+                toast.textContent = msg;
+                toast.classList.add('show');
+                setTimeout(()=> toast.classList.remove('show'), duration);
+            }
+
+            // favicon extractor from URL (best effort)
+            function getFaviconUrl(pageUrl){
+                try{
+                    let urlObj = new URL(pageUrl);
+                    let origin = urlObj.origin;
+                    return `https://www.google.com/s2/favicons?domain=${origin}&sz=32`;
+                }catch(e){
+                    return null;
+                }
+            }
+
+            function updateTabIconUI(tabId, pageUrl){
+                const tabElement = document.querySelector(`.tab[data-id='${tabId}']`);
+                if(!tabElement) return;
+                const iconSpan = tabElement.querySelector('.tab-icon');
+                if(!iconSpan) return;
+                if(!pageUrl || pageUrl === 'about:blank' || pageUrl.startsWith('new-tab')){
+                    iconSpan.style.backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.6)'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E")`;
+                    iconSpan.classList.add('default-icon');
+                    return;
+                }
+                const fav = getFaviconUrl(pageUrl);
+                if(fav){
+                    iconSpan.style.backgroundImage = `url('${fav}')`;
+                    iconSpan.style.backgroundSize = 'contain';
+                    iconSpan.classList.remove('default-icon');
+                    iconSpan.style.backgroundColor = 'transparent';
+                }else{
+                    iconSpan.style.backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.5)'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E")`;
+                    iconSpan.classList.add('default-icon');
+                }
+            }
+
+            function createIframeForTab(tab){
+                const iframe = document.createElement('iframe');
+                iframe.className = 'browser-frame';
+                iframe.sandbox = 'allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-downloads';
+                iframe.src = tab.url;
+                iframe.setAttribute('data-tab-id', tab.id);
+                iframe.style.backgroundColor = '#fff';
+                iframe.addEventListener('load', function(e){
+                    const currentTab = tabs.find(t=> t.id === tab.id);
+                    if(currentTab && iframe.src && !iframe.src.startsWith('about:blank')){
+                        let finalUrl = iframe.contentWindow.location.href;
+                        if(finalUrl && finalUrl !== 'about:blank'){
+                            currentTab.url = finalUrl;
+                            urlInput.value = finalUrl;
+                            updateTabIconUI(currentTab.id, finalUrl);
+                            const tabElement = document.querySelector(`.tab[data-id='${currentTab.id}']`);
+                            if(tabElement){
+                                let titleText = iframe.contentDocument?.title?.trim() || new URL(finalUrl).hostname;
+                                if(titleText.length>32) titleText = titleText.slice(0,28)+'…';
+                                const titleSpan = tabElement.querySelector('.tab-title');
+                                if(titleSpan) titleSpan.textContent = titleText || 'Website';
+                            }
+                            if(activeTabId === currentTab.id) loadingIcon.classList.add('hidden');
+                        }
+                    }
+                    loadingIcon.classList.add('hidden');
+                });
+                iframe.addEventListener('error', ()=> loadingIcon.classList.add('hidden'));
+                return iframe;
+            }
+
+            function renderTabs(){
+                tabContainer.innerHTML = '';
+                tabs.forEach(tab => {
+                    const tabDiv = document.createElement('div');
+                    tabDiv.className = `tab ${activeTabId === tab.id ? 'active' : ''}`;
+                    tabDiv.setAttribute('data-id', tab.id);
+                    const iconSpan = document.createElement('span');
+                    iconSpan.className = 'tab-icon';
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = 'tab-title';
+                    let displayTitle = tab.title || (tab.url && tab.url !== 'about:blank' && tab.url !== 'new-tab' ? (()=>{try{return new URL(tab.url).hostname}catch(e){return 'New Tab'}})() : 'New Tab');
+                    titleSpan.textContent = displayTitle.length>26 ? displayTitle.slice(0,24)+'…' : displayTitle;
+                    const closeSpan = document.createElement('span');
+                    closeSpan.className = 'tab-close';
+                    closeSpan.innerHTML = '✕';
+                    closeSpan.addEventListener('click', (e)=>{
+                        e.stopPropagation();
+                        closeTab(tab.id);
+                    });
+                    tabDiv.appendChild(iconSpan);
+                    tabDiv.appendChild(titleSpan);
+                    tabDiv.appendChild(closeSpan);
+                    tabDiv.addEventListener('click', ()=> switchTab(tab.id));
+                    tabContainer.appendChild(tabDiv);
+                    updateTabIconUI(tab.id, tab.url);
+                    if(tab.loadingState) iconSpan.classList.add('loading-icon-tab'); else iconSpan.classList.remove('loading-icon-tab');
+                });
+                const newBtn = document.createElement('button');
+                newBtn.id = 'new-tab-btn';
+                newBtn.innerHTML = '+';
+                newBtn.onclick = (e)=>{ e.stopPropagation(); createNewTab(); };
+                tabContainer.appendChild(newBtn);
+            }
+
+            function switchTab(tabId){
+                if(activeTabId === tabId) return;
+                const prevActive = document.querySelector(`.browser-frame.active`);
+                if(prevActive) prevActive.classList.remove('active');
+                document.querySelectorAll('.tab').forEach(t=> t.classList.remove('active'));
+                const newTab = tabs.find(t=> t.id === tabId);
+                if(newTab){
+                    activeTabId = tabId;
+                    const frame = document.querySelector(`.browser-frame[data-tab-id='${tabId}']`);
+                    if(frame){
+                        frame.classList.add('active');
+                        urlInput.value = newTab.url !== 'new-tab' ? newTab.url : '';
+                        if(newTab.url !== 'new-tab') urlInput.value = newTab.url;
+                        else urlInput.value = '';
+                    } else if(newTab.url !== 'new-tab') {
+                        const iframe = createIframeForTab(newTab);
+                        iframe.classList.add('active');
+                        webContainer.appendChild(iframe);
+                        urlInput.value = newTab.url;
+                    }
+                    const ntPage = document.getElementById('new-tab-page');
+                    if(newTab.url === 'new-tab'){
+                        ntPage.classList.add('active');
+                        if(frame && frame.classList) frame.classList.remove('active');
+                        urlInput.value = '';
+                    } else {
+                        ntPage.classList.remove('active');
+                    }
+                    renderTabs();
+                    loadingIcon.classList.add('hidden');
+                }
+            }
+
+            function closeTab(id){
+                const idx = tabs.findIndex(t=> t.id === id);
+                if(idx === -1) return;
+                const removed = tabs[idx];
+                const frameToRemove = document.querySelector(`.browser-frame[data-tab-id='${id}']`);
+                if(frameToRemove) frameToRemove.remove();
+                tabs.splice(idx,1);
+                if(tabs.length === 0){
+                    createNewTab();
+                } else {
+                    if(activeTabId === id){
+                        let newActive = tabs[Math.min(idx, tabs.length-1)];
+                        switchTab(newActive.id);
+                    } else {
+                        renderTabs();
+                    }
+                }
+                renderTabs();
+            }
+
+            function createNewTab(url=null){
+                let finalUrl = (url && url.trim() !== '') ? url : 'new-tab';
+                if(finalUrl !== 'new-tab' && !finalUrl.startsWith('http') && !finalUrl.startsWith('https')) finalUrl = 'https://' + finalUrl;
+                const newId = nextId++;
+                const newTab = { id: newId, url: finalUrl === 'new-tab' ? 'new-tab' : finalUrl, title: 'New Tab', loadingState: false };
+                tabs.push(newTab);
+                if(finalUrl !== 'new-tab'){
+                    const iframe = createIframeForTab(newTab);
+                    iframe.classList.add('active');
+                    webContainer.appendChild(iframe);
+                    newTab.loadingState = true;
+                } else {
+                    const ntDiv = document.getElementById('new-tab-page');
+                    ntDiv.classList.add('active');
+                }
+                activeTabId = newId;
+                renderTabs();
+                if(finalUrl !== 'new-tab') {
+                    loadingIcon.classList.remove('hidden');
+                    urlInput.value = finalUrl;
+                    const ifr = document.querySelector(`.browser-frame[data-tab-id='${newId}']`);
+                    if(ifr) ifr.src = finalUrl;
+                } else {
+                    urlInput.value = '';
+                    loadingIcon.classList.add('hidden');
+                }
+                const ntSearch = document.getElementById('nt-search-input');
+                if(ntSearch) ntSearch.value = '';
+            }
+
+            function navigateTo(input){
+                let query = input.trim();
+                if(!query) return;
+                let finalUrl;
+                if(query.match(/^(https?:\/\/)/i)) finalUrl = query;
+                else if(query.includes('.') && !query.includes(' ')) finalUrl = 'https://' + query;
+                else finalUrl = getSearchUrl(query);
+                const active = tabs.find(t=> t.id === activeTabId);
+                if(active){
+                    if(active.url === 'new-tab'){
+                        active.url = finalUrl;
+                        const frame = createIframeForTab(active);
+                        frame.classList.add('active');
+                        webContainer.appendChild(frame);
+                        document.getElementById('new-tab-page').classList.remove('active');
+                        frame.src = finalUrl;
+                        loadingIcon.classList.remove('hidden');
+                        active.loadingState = true;
+                    } else {
+                        const iframe = document.querySelector(`.browser-frame[data-tab-id='${active.id}']`);
+                        if(iframe){
+                            loadingIcon.classList.remove('hidden');
+                            iframe.src = finalUrl;
+                            active.loadingState = true;
+                        }
+                    }
+                    active.url = finalUrl;
+                    urlInput.value = finalUrl;
+                    updateTabIconUI(active.id, finalUrl);
+                    renderTabs();
+                }
+            }
+
+            function refreshActive(){
+                const active = tabs.find(t=> t.id === activeTabId);
+                if(active && active.url !== 'new-tab'){
+                    const iframe = document.querySelector(`.browser-frame[data-tab-id='${active.id}']`);
+                    if(iframe){
+                        loadingIcon.classList.remove('hidden');
+                        iframe.src = iframe.src;
+                    }
+                }
+            }
+
+            function goBack(){
+                const iframe = document.querySelector(`.browser-frame[data-tab-id='${activeTabId}']`);
+                if(iframe && iframe.contentWindow) iframe.contentWindow.history.back();
+            }
+            function goForward(){
+                const iframe = document.querySelector(`.browser-frame[data-tab-id='${activeTabId}']`);
+                if(iframe && iframe.contentWindow) iframe.contentWindow.history.forward();
+            }
+
+            function applySettings(){
+                homepage = homepageInput.value.trim() || 'https://www.google.com';
+                searchEngine = searchEngineSelect.value;
+                saveSettingsPersist();
+                showToast('Settings saved');
+            }
+
+            function loadSettingsUI(){
+                homepageInput.value = homepage;
+                searchEngineSelect.value = searchEngine;
+            }
+
+            newTabBtn.addEventListener('click', ()=> createNewTab());
+            urlInput.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') navigateTo(urlInput.value); });
+            ntSearchInput.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') { navigateTo(ntSearchInput.value); ntSearchInput.value = ''; } });
+            refreshBtn.addEventListener('click', refreshActive);
+            backBtn.addEventListener('click', goBack);
+            forwardBtn.addEventListener('click', goForward);
+            fullscreenBtn.addEventListener('click', ()=>{
+                document.body.classList.add('fullscreen-mode');
+                showToast('Fullscreen · move mouse top‑left to exit');
+            });
+            document.getElementById('exit-fullscreen-btn').addEventListener('click', ()=>{
+                document.body.classList.remove('fullscreen-mode');
+                showToast('Exited fullscreen');
+            });
+            menuDots.addEventListener('click', (e)=>{
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+            document.addEventListener('click', ()=> dropdown.classList.remove('open'));
+            document.getElementById('settings-btn').addEventListener('click', ()=>{
+                loadSettingsUI();
+                settingsModal.classList.add('open');
+                dropdown.classList.remove('open');
+            });
+            document.getElementById('close-settings').addEventListener('click', ()=> settingsModal.classList.remove('open'));
+            document.getElementById('save-settings').addEventListener('click', ()=>{
+                applySettings();
+                settingsModal.classList.remove('open');
+            });
+            document.getElementById('about-btn').addEventListener('click', ()=>{
+                showToast('Orion Flow · minimal glass browser');
+                dropdown.classList.remove('open');
+            });
+
+            createNewTab(homepage);
+        })();
+    </script>
+</body>
+</html>
