@@ -1155,7 +1155,7 @@ function enterDesktop() {
   restoreOSWindows();
   osStateLoaded = true;
   document.getElementById('desktop').classList.add('loaded');
-  setTimeout(() => showNotif('Welcome to Optimistic', 'Hello, ' + (currentUser?.name||'User') + '! 🌿'), 500);
+  setTimeout(() => showNotif('Welcome to Optimistic', 'Hello, ' + (currentUser?.name||'User') + '! '), 500);
   // Show cookie banner if needed
   checkCookieBanner();
 }
