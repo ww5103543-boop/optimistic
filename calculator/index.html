@@ -13,7 +13,7 @@
     }
 
     body {
-      background: transparent;
+      background: transparent !important;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -22,9 +22,9 @@
     }
 
     .calculator {
-      background: transparent;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 28px;
       padding: 20px;
@@ -34,9 +34,9 @@
     }
 
     .display {
-      background: transparent;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       padding: 20px 16px;
@@ -72,9 +72,9 @@
     }
 
     .btn {
-      background: transparent;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 18px;
       padding: 16px 8px;
@@ -87,7 +87,7 @@
     }
 
     .btn:hover {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.08) !important;
       transform: scale(0.96);
       border-color: rgba(255, 255, 255, 0.2);
     }
@@ -103,7 +103,7 @@
     }
 
     .btn-operator:hover {
-      background: rgba(135, 184, 127, 0.15);
+      background: rgba(135, 184, 127, 0.15) !important;
       border-color: rgba(135, 184, 127, 0.5);
     }
 
@@ -113,12 +113,12 @@
     }
 
     .btn-equals:hover {
-      background: rgba(135, 184, 127, 0.25);
+      background: rgba(135, 184, 127, 0.25) !important;
       border-color: rgba(135, 184, 127, 0.6);
     }
 
     .btn-clear:hover {
-      background: rgba(255, 100, 100, 0.15);
+      background: rgba(255, 100, 100, 0.15) !important;
       border-color: rgba(255, 100, 100, 0.3);
     }
 
