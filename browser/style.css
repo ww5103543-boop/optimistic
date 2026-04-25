@@ -139,14 +139,9 @@ body.fullscreen-mode #exit-fullscreen-overlay {
   text-overflow: ellipsis;
 }
 
+/* TAB ICON COMPLETELY REMOVED - NO MORE CIRCLE */
 .tab-icon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  border-radius: 3px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
+  display: none;
 }
 
 .tab-close {
