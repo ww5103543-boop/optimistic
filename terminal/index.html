@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Optimistic Terminal</title>
+    <title>Terminal</title>
     <style>
         * {
             margin: 0;
@@ -167,21 +167,20 @@
         prompt.textContent = `${username}@optimistic:${dir}$ `;
     }
 
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
     function appendOutput(text, isCmd = false) {
         const div = document.createElement('div');
         div.className = 'line';
         if (isCmd) {
-            div.innerHTML = `<span style="color:#87b87f">${prompt.textContent.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            })}</span><span style="color:#b8d8b0">${text.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            })}</span>`;
+            div.innerHTML = `<span style="color:#87b87f">${escapeHtml(prompt.textContent)}</span><span style="color:#b8d8b0">${escapeHtml(text)}</span>`;
         } else {
             div.textContent = text;
         }
@@ -218,15 +217,13 @@
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(cmd);
         } else {
-            appendOutput('Not connected to server');
+            appendOutput('Not connected');
         }
     }
 
     function connect() {
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.hostname;
-        const port = '3001';
-        const wsUrl = `${protocol}//${host}:${port}`;
+        const wsUrl = `${protocol}//${window.location.host}/terminal-ws`;
         
         setStatus('connecting', 'connecting');
         
@@ -263,7 +260,6 @@
             
             ws.onerror = () => {
                 setStatus('disconnected', 'error');
-                appendOutput('WebSocket error - make sure server is running on port 3001');
             };
             
             ws.onclose = () => {
@@ -277,7 +273,7 @@
                 }
             };
         } catch(e) {
-            appendOutput('Failed to connect: ' + e.message);
+            appendOutput('Failed to connect');
             setStatus('disconnected', 'error');
         }
     }
