@@ -10,8 +10,6 @@ It runs with many apps including
 
 ## Apps
 
-Scramjet has CAPTCHA support! Some of the popular websites that Scramjet supports include:
-
 - [Scramjet](https://github.com/MercuryWorkshop/scramjet/blob/main/)
 - Terminal (Real, running sudo etc)
 - [games](https://optimistic.top/games/index.html)
