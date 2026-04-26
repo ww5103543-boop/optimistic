@@ -25,9 +25,9 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 5vw;
+      padding: 0;
       
-      /* TRANSPARENT GLASS — exactly like Orion browser style */
+      /* ORION-STYLE TRANSPARENCY: pure blur, no solid background */
       background: transparent;
       backdrop-filter: blur(42px);
       -webkit-backdrop-filter: blur(42px);
@@ -38,13 +38,13 @@
       display: flex;
       justify-content: flex-end;
       align-items: flex-start;
-      padding: 20px;
+      padding: 20px 24px;
       overflow: hidden;
     }
 
     .current-operand {
       color: rgba(255, 255, 255, 0.96);
-      font-size: 180px;
+      font-size: 120px;
       font-weight: 700;
       line-height: 1;
       letter-spacing: -2px;
@@ -60,15 +60,16 @@
       grid-template-columns: repeat(4, 1fr);
       height: 70%;
       width: 100%;
-      gap: 6px;
+      gap: 0;
+      background: transparent;
     }
 
     .btn {
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
+      border-radius: 0;
       color: rgba(255, 255, 255, 0.92);
       font-size: clamp(28px, 5vw, 42px);
       font-weight: 600;
@@ -77,16 +78,33 @@
       justify-content: center;
       cursor: pointer;
       transition: all 0.12s ease;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Remove double borders between buttons */
+    .btn:not(:first-child) {
+      border-left: none;
+    }
+    
+    .buttons-grid .btn:nth-child(4n+1) {
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Remove top borders except first row */
+    .buttons-grid .btn:nth-child(n+5) {
+      border-top: none;
     }
 
     .btn:hover {
-      background: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.2);
       border-color: rgba(255, 255, 255, 0.2);
     }
 
     .btn:active {
-      background: rgba(255, 255, 255, 0.28);
-      transform: scale(0.97);
+      background: rgba(255, 255, 255, 0.32);
+      transform: scale(0.98);
     }
 
     .btn svg {
@@ -96,19 +114,20 @@
 
     .btn-equal {
       grid-column: span 2;
-      background: rgba(255, 149, 0, 0.3);
-      border-color: rgba(255, 149, 0, 0.4);
+      /* MINT GREEN equals button */
+      background: rgba(100, 200, 150, 0.4);
+      border-color: rgba(100, 200, 150, 0.5);
+      color: rgba(255, 255, 255, 0.98);
     }
 
     .btn-equal:hover {
-      background: rgba(255, 149, 0, 0.45);
-      border-color: rgba(255, 180, 70, 0.6);
+      background: rgba(100, 200, 150, 0.6);
+      border-color: rgba(120, 220, 170, 0.7);
     }
 
     @media (max-width: 600px) {
-      .current-operand { font-size: 80px; }
-      .calculator { padding: 20px; }
-      .btn { border-radius: 16px; }
+      .current-operand { font-size: 64px; }
+      .display-container { padding: 15px 20px; }
     }
   </style>
 </head>
@@ -159,14 +178,16 @@
 
     function adjustFontSize() {
       const length = currentInput.length;
-      if (length <= 5) {
-        display.style.fontSize = '180px';
-      } else if (length <= 8) {
+      if (length <= 3) {
+        display.style.fontSize = '100px';
+      } else if (length <= 6) {
         display.style.fontSize = '120px';
+      } else if (length <= 9) {
+        display.style.fontSize = '90px';
       } else if (length <= 12) {
-        display.style.fontSize = '80px';
+        display.style.fontSize = '70px';
       } else {
-        display.style.fontSize = '50px';
+        display.style.fontSize = '48px';
       }
     }
 
@@ -206,6 +227,30 @@
       }
       updateDisplay();
     }
+
+    // Keyboard support
+    function handleKeyboard(e) {
+      const key = e.key;
+      
+      const preventKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '+', '-', '*', '/', 'Enter', '=', 'Backspace', 'Escape', 'Delete'];
+      if (preventKeys.includes(key) || key === 'ArrowLeft') {
+        e.preventDefault();
+      }
+      
+      if (/^[0-9]$/.test(key)) append(key);
+      if (key === '.') append('.');
+      if (key === '+') append('+');
+      if (key === '-') append('-');
+      if (key === '*') append('*');
+      if (key === '/') append('/');
+      if (key === 'Enter' || key === '=') calculate();
+      if (key === 'Backspace') backspace();
+      if (key === 'Escape' || key === 'Delete') clearDisplay();
+      if (key === 's' || key === 'S' || key === '~') toggleSign();
+    }
+    
+    document.addEventListener('keydown', handleKeyboard);
+    adjustFontSize();
   </script>
 </body>
 </html>
