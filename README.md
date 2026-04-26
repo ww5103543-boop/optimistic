@@ -19,5 +19,5 @@ Optimistic is a webos (kinda) it runs with non-static files but its running html
 
 ## Contributers/Helpers
 
-- [exvy](dsc.gg/sunlits)
-- [muzan](dsc.gg/sunlits)
+- [exvy](dsc.gg/sunlits) (Main Developer)
+- [muzan](dsc.gg/sunlits) (Bug Finding, Emotional support <3)
