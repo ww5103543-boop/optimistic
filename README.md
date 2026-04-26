@@ -13,3 +13,11 @@ Optimistic is a webos (kinda) it runs with non-static files but its running html
 - Terminal (Real, running sudo etc)
 - [games](https://optimistic.top/games/index.html)
 & more
+
+## Resources
+[scramjet](https://github.com/MercuryWorkshop/scramjet/blob/main/)
+
+## Contributers/Helpers
+
+[exvy](dsc.gg/sunlits)
+[muzan](dsc.gg/sunlits)
