@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Transparent UI Calculator</title>
+  <title>Calculator</title>
   <style>
     * {
       margin: 0;
@@ -181,39 +181,39 @@
 
     function adjustFontSize() {
       const length = currentInput.length;
-      // More aggressive scaling to prevent overflow at all digit lengths
-      if (length <= 4) {
+      // Balanced scaling - starts big, scales down gradually
+      if (length <= 5) {
+        display.style.fontSize = '120px';
+      } else if (length <= 7) {
         display.style.fontSize = '100px';
-      } else if (length <= 6) {
-        display.style.fontSize = '80px';
-      } else if (length <= 8) {
-        display.style.fontSize = '65px';
-      } else if (length <= 10) {
+      } else if (length <= 9) {
+        display.style.fontSize = '85px';
+      } else if (length <= 11) {
+        display.style.fontSize = '72px';
+      } else if (length <= 13) {
+        display.style.fontSize = '60px';
+      } else if (length <= 15) {
         display.style.fontSize = '52px';
-      } else if (length <= 12) {
-        display.style.fontSize = '42px';
-      } else if (length <= 14) {
-        display.style.fontSize = '36px';
-      } else if (length <= 16) {
-        display.style.fontSize = '30px';
+      } else if (length <= 17) {
+        display.style.fontSize = '45px';
       } else {
-        display.style.fontSize = '24px';
+        display.style.fontSize = '38px';
       }
       
-      // Override for small screens
+      // Small screen adjustment
       if (window.innerWidth <= 600) {
-        if (length <= 4) {
-          display.style.fontSize = '56px';
-        } else if (length <= 6) {
-          display.style.fontSize = '48px';
-        } else if (length <= 8) {
-          display.style.fontSize = '40px';
-        } else if (length <= 10) {
-          display.style.fontSize = '34px';
-        } else if (length <= 12) {
-          display.style.fontSize = '28px';
+        if (length <= 5) {
+          display.style.fontSize = '68px';
+        } else if (length <= 7) {
+          display.style.fontSize = '58px';
+        } else if (length <= 9) {
+          display.style.fontSize = '50px';
+        } else if (length <= 11) {
+          display.style.fontSize = '44px';
+        } else if (length <= 13) {
+          display.style.fontSize = '38px';
         } else {
-          display.style.fontSize = '22px';
+          display.style.fontSize = '32px';
         }
       }
     }
