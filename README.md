@@ -5,8 +5,7 @@
 
 ---
 
-Optimistic is a webos (kinda) it runs with non-static files but its running html. 
-It runs with many apps including 
+Optimistic is a webos (kinda) it runs with non-static files but its running html, it has many cool features you can toy with this is made to bypass your restrictions. <3
 
 ## Apps
 
