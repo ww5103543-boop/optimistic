@@ -181,7 +181,6 @@
 
     function adjustFontSize() {
       const length = currentInput.length;
-      // Balanced scaling - starts big, scales down gradually
       if (length <= 5) {
         display.style.fontSize = '120px';
       } else if (length <= 7) {
@@ -200,7 +199,6 @@
         display.style.fontSize = '38px';
       }
       
-      // Small screen adjustment
       if (window.innerWidth <= 600) {
         if (length <= 5) {
           display.style.fontSize = '68px';
@@ -255,7 +253,6 @@
       updateDisplay();
     }
 
-    // Keyboard support
     function handleKeyboard(e) {
       const key = e.key;
       
