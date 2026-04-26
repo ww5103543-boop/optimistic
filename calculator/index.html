@@ -2,128 +2,129 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculator UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Transparent UI Calculator</title>
   <style>
-    :root {
-      --text-color: #ffffff;
-      --bg-gradient: radial-gradient(circle at center, #2d3e31 0%, #1a1d1a 100%);
-    }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    body {
-      background: #000;
+    body, html {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .calculator {
+      width: 100vw;
       height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Main Container mimicking the image window */
-    .calculator {
-      width: 320px;
-      height: 520px;
-      background: var(--bg-gradient);
-      position: relative;
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      overflow: hidden;
-      display: flex;
       flex-direction: column;
-      padding: 20px;
+      padding: 5vw;
+      
+      /* TRANSPARENT GLASS — exactly like Orion browser style */
+      background: transparent;
+      backdrop-filter: blur(42px);
+      -webkit-backdrop-filter: blur(42px);
     }
 
-    /* Top bar mimics window controls */
-    .window-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: rgba(255,255,255,0.8);
-      font-size: 14px;
-      margin-bottom: 30px;
-    }
-
-    .display {
+    .display-container {
       flex: 1;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-end;
-      padding: 10px;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 20px;
+      overflow: hidden;
     }
 
     .current-operand {
-      color: var(--text-color);
-      font-size: 80px;
-      font-weight: 300;
+      color: rgba(255, 255, 255, 0.96);
+      font-size: 180px;
+      font-weight: 700;
       line-height: 1;
+      letter-spacing: -2px;
+      text-align: right;
+      word-break: break-all;
+      max-width: 100%;
+      transition: font-size 0.1s ease;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
     }
 
     .buttons-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 5px;
-      margin-top: auto;
+      height: 70%;
+      width: 100%;
+      gap: 6px;
     }
 
     .btn {
-      background: transparent;
-      border: none;
-      color: var(--text-color);
-      font-size: 22px;
-      font-weight: 500;
-      height: 70px;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      border-radius: 8px;
-      transition: background 0.2s;
+      transition: all 0.12s ease;
     }
 
     .btn:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
     .btn:active {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.28);
+      transform: scale(0.97);
     }
 
-    /* Specific icon for backspace */
-    .backspace-icon {
-      width: 24px;
-      height: 24px;
+    .btn svg {
+      width: clamp(30px, 5vw, 40px);
       fill: currentColor;
+    }
+
+    .btn-equal {
+      grid-column: span 2;
+      background: rgba(255, 149, 0, 0.3);
+      border-color: rgba(255, 149, 0, 0.4);
+    }
+
+    .btn-equal:hover {
+      background: rgba(255, 149, 0, 0.45);
+      border-color: rgba(255, 180, 70, 0.6);
+    }
+
+    @media (max-width: 600px) {
+      .current-operand { font-size: 80px; }
+      .calculator { padding: 20px; }
+      .btn { border-radius: 16px; }
     }
   </style>
 </head>
 <body>
 
   <div class="calculator">
-    <div class="window-header">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg>
-        <span>Calculator</span>
-      </div>
-      <div style="letter-spacing: 5px; font-size: 12px;">— ▢ ✕</div>
-    </div>
-
-    <div class="display">
+    <div class="display-container">
       <div class="current-operand" id="display">0</div>
     </div>
 
     <div class="buttons-grid">
       <button class="btn" onclick="backspace()">
-        <svg class="backspace-icon" viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>
       </button>
       <button class="btn" onclick="clearDisplay()">ac</button>
-      <button class="btn">+/-</button>
+      <button class="btn" onclick="toggleSign()">+/-</button>
       <button class="btn" onclick="append('/')">/</button>
 
       <button class="btn" onclick="append('7')">7</button>
@@ -143,23 +144,37 @@
 
       <button class="btn" onclick="append('0')">0</button>
       <button class="btn" onclick="append('.')">.</button>
-      <button class="btn" style="grid-column: span 2;" onclick="calculate()">=</button>
+      <button class="btn btn-equal" onclick="calculate()">=</button>
     </div>
   </div>
 
   <script>
-    let display = document.getElementById('display');
+    const display = document.getElementById('display');
     let currentInput = '0';
 
     function updateDisplay() {
       display.innerText = currentInput;
+      adjustFontSize();
+    }
+
+    function adjustFontSize() {
+      const length = currentInput.length;
+      if (length <= 5) {
+        display.style.fontSize = '180px';
+      } else if (length <= 8) {
+        display.style.fontSize = '120px';
+      } else if (length <= 12) {
+        display.style.fontSize = '80px';
+      } else {
+        display.style.fontSize = '50px';
+      }
     }
 
     function append(char) {
       if (currentInput === '0' && char !== '.') {
         currentInput = char;
       } else {
-        currentInput += char;
+        if (currentInput.length < 24) currentInput += char;
       }
       updateDisplay();
     }
@@ -170,19 +185,24 @@
     }
 
     function backspace() {
-      if (currentInput.length > 1) {
-        currentInput = currentInput.slice(0, -1);
-      } else {
-        currentInput = '0';
-      }
+      currentInput = currentInput.length > 1 ? currentInput.slice(0, -1) : '0';
+      updateDisplay();
+    }
+
+    function toggleSign() {
+      let num = parseFloat(currentInput);
+      if (isNaN(num)) return;
+      num = -num;
+      currentInput = num.toString();
       updateDisplay();
     }
 
     function calculate() {
       try {
-        currentInput = eval(currentInput).toString();
+        let result = eval(currentInput.replace(/[^-+/*0-9.]/g, ''));
+        currentInput = Number.isInteger(result) ? result.toString() : result.toFixed(4).toString();
       } catch {
-        currentInput = "Error";
+        currentInput = "0";
       }
       updateDisplay();
     }
