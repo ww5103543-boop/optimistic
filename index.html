@@ -596,6 +596,7 @@
   .desktop-icon:hover { background:rgba(255,255,255,0.1); }
   .desktop-icon span { font-size:11px; color:#fff; text-align:center; line-height:1.3; text-shadow:0 1px 6px rgba(0,0,0,0.9); word-break:break-word; }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -763,13 +764,14 @@
     </div>
     <div class="tb-sep"></div>
     <div id="pinned-apps">
-      <div class="pinned-app" title="Files" data-app="files" onclick="openApp('files')"><svg viewBox="0 0 24 24" fill="#87b87f" width="18" height="18"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></div>
-      <div class="pinned-app" title="Terminal" data-app="terminal" onclick="openApp('terminal')"><img src="https://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Terminal-Pc-104-icon.png" width="18" height="18" style="object-fit:contain"></div>
-      <div class="pinned-app" title="Text Editor" data-app="editor" onclick="openApp('editor')"><img src="https://img.icons8.com/ios_filled/512/40C057/document.png" width="18" height="18" style="object-fit:contain"></div>
-      <div class="pinned-app" title="Calculator" data-app="calculator" onclick="openApp('calculator')"><img src="https://i.pinimg.com/564x/ae/bd/9d/aebd9d673c125947c9e3c92407525ca0.jpg" width="18" height="18" style="object-fit:contain;border-radius:3px"></div>
-      <div class="pinned-app" title="Settings" data-app="settings" onclick="openApp('settings')"><img src="https://img.icons8.com/ios_filled/512/40C057/apple-settings.png" width="18" height="18" style="object-fit:contain"></div>
-      <div class="pinned-app" title="Browser" data-app="browser" onclick="openApp('browser')"><img src="https://archive.org/download/lalicat-browser-logo/logo1000.png" width="18" height="18" style="object-fit:contain"></div>
-      <div class="pinned-app" title="Games" data-app="games" onclick="openApp('games')"><img src="https://img.icons8.com/ios11/512/40C057/apple-arcade.png" width="18" height="18" style="object-fit:contain"></div>
+      <div class="pinned-app" title="Files" data-app="files" onclick="openApp('files')" ondblclick="closePinnedApp('files')"><svg viewBox="0 0 24 24" fill="#87b87f" width="18" height="18"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></div>
+      <div class="pinned-app" title="Terminal" data-app="terminal" onclick="openApp('terminal')" ondblclick="closePinnedApp('terminal')"><img src="https://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Terminal-Pc-104-icon.png" width="18" height="18" style="object-fit:contain"></div>
+      <div class="pinned-app" title="Text Editor" data-app="editor" onclick="openApp('editor')" ondblclick="closePinnedApp('editor')"><img src="https://img.icons8.com/ios_filled/512/40C057/document.png" width="18" height="18" style="object-fit:contain"></div>
+      <div class="pinned-app" title="Calculator" data-app="calculator" onclick="openApp('calculator')" ondblclick="closePinnedApp('calculator')"><img src="https://i.pinimg.com/564x/ae/bd/9d/aebd9d673c125947c9e3c92407525ca0.jpg" width="18" height="18" style="object-fit:contain;border-radius:3px"></div>
+      <div class="pinned-app" title="Settings" data-app="settings" onclick="openApp('settings')" ondblclick="closePinnedApp('settings')"><img src="https://img.icons8.com/ios_filled/512/40C057/apple-settings.png" width="18" height="18" style="object-fit:contain"></div>
+      <div class="pinned-app" title="Browser" data-app="browser" onclick="openApp('browser')" ondblclick="closePinnedApp('browser')"><img src="https://archive.org/download/lalicat-browser-logo/logo1000.png" width="18" height="18" style="object-fit:contain"></div>
+      <div class="pinned-app" title="Games" data-app="games" onclick="openApp('games')" ondblclick="closePinnedApp('games')"><img src="https://img.icons8.com/ios11/512/40C057/apple-arcade.png" width="18" height="18" style="object-fit:contain"></div>
+      <div class="pinned-app" title="Store" data-app="store" onclick="openApp('store')" ondblclick="closePinnedApp('store')"><img src="https://img.icons8.com/ios_filled/512/40C057/apple-app-store--v2.png" width="18" height="18" style="object-fit:contain"></div>
     </div>
     <div class="tb-sep"></div>
     <div id="open-windows"></div>
@@ -1858,6 +1860,7 @@ const allApps=[
   {id:'settings',label:'System Settings',img:'https://img.icons8.com/ios_filled/512/40C057/apple-settings.png'},
   {id:'browser',label:'Browser',img:'https://archive.org/download/lalicat-browser-logo/logo1000.png'},
   {id:'games',label:'Games',img:'https://img.icons8.com/ios11/512/40C057/apple-arcade.png'},
+  {id:'store',label:'Store',img:'https://img.icons8.com/ios_filled/512/40C057/apple-app-store--v2.png'},
 ];
 function buildMenuList(filter=''){
   const list=document.getElementById('menu-apps-list');
@@ -1888,6 +1891,12 @@ document.getElementById('desktop').addEventListener('contextmenu',e=>{
 function closeCtx(){document.getElementById('context-menu').classList.remove('open');}
 
 let winOffsetX=60,winOffsetY=40;
+function closePinnedApp(id) {
+  if (windows[id]) {
+    closeWindow(id);
+  }
+}
+
 function openApp(id){
   if(!currentUser)return;
   const configs={
@@ -1897,7 +1906,8 @@ function openApp(id){
     calculator:{title:'Calculator',w:360,h:560,icon:'https://i.pinimg.com/564x/ae/bd/9d/aebd9d673c125947c9e3c92407525ca0.jpg',glass:true,fn:()=>'<iframe src="/calculator/index.html" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen"></iframe>'},
     settings:{title:'System Settings',w:700,h:480,icon:'https://img.icons8.com/ios_filled/512/40C057/apple-settings.png',fn:settingsContent},
     browser:{title:'Browser',w:900,h:640,icon:'https://archive.org/download/lalicat-browser-logo/logo1000.png',glass:true,fn:()=>'<iframe src="/browser/index.html" allowtransparency="true" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write"></iframe>'},
-    games:{title:'Games',w:920,h:720,icon:'https://img.icons8.com/ios11/512/40C057/apple-arcade.png',glass:true,fn:()=>'<iframe src="/games/index.html" allowtransparency="true" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write; autoplay"></iframe>'}
+    games:{title:'Games',w:920,h:720,icon:'https://img.icons8.com/ios11/512/40C057/apple-arcade.png',glass:true,fn:()=>'<iframe src="/games/index.html" allowtransparency="true" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write; autoplay"></iframe>'},
+    store:{title:'Store',w:900,h:640,icon:'https://img.icons8.com/ios_filled/512/40C057/apple-app-store--v2.png',glass:true,fn:()=>'<iframe src="/store/index.html" allowtransparency="true" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write"></iframe>'}
   };
   const cfg=configs[id];if(!cfg)return;
   const x=Math.min(60+(winOffsetX%180),window.innerWidth-cfg.w-20);
