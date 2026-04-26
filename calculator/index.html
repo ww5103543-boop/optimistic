@@ -3,304 +3,189 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculator</title>
+  <title>Calculator UI</title>
   <style>
+    :root {
+      --text-color: #ffffff;
+      --bg-gradient: radial-gradient(circle at center, #2d3e31 0%, #1a1d1a 100%);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
-      background: transparent !important;
-      min-height: 100vh;
+      background: #000;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    /* Main Container mimicking the image window */
+    .calculator {
+      width: 320px;
+      height: 520px;
+      background: var(--bg-gradient);
+      position: relative;
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
       padding: 20px;
     }
 
-    .calculator {
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 28px;
-      padding: 20px;
-      width: 100%;
-      max-width: 380px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    /* Top bar mimics window controls */
+    .window-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: rgba(255,255,255,0.8);
+      font-size: 14px;
+      margin-bottom: 30px;
     }
 
     .display {
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 20px 16px;
-      margin-bottom: 20px;
-      text-align: right;
-    }
-
-    .previous-operand {
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 13px;
-      min-height: 20px;
-      margin-bottom: 6px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-end;
+      padding: 10px;
     }
 
     .current-operand {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 44px;
-      font-weight: 500;
-      letter-spacing: -1px;
-      line-height: 1.1;
-      overflow-x: auto;
-      white-space: nowrap;
+      color: var(--text-color);
+      font-size: 80px;
+      font-weight: 300;
+      line-height: 1;
     }
 
-    .current-operand::-webkit-scrollbar {
-      height: 2px;
-    }
-
-    .buttons {
+    .buttons-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 5px;
+      margin-top: auto;
     }
 
     .btn {
-      background: transparent !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 18px;
-      padding: 16px 8px;
-      font-size: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      font-size: 22px;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.85);
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: all 0.15s ease;
-      text-align: center;
+      border-radius: 8px;
+      transition: background 0.2s;
     }
 
     .btn:hover {
-      background: rgba(255, 255, 255, 0.08) !important;
-      transform: scale(0.96);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .btn:active {
-      transform: scale(0.93);
-      transition: 0.03s;
+      background: rgba(255, 255, 255, 0.1);
     }
 
-    .btn-operator {
-      border-color: rgba(135, 184, 127, 0.3);
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    .btn-operator:hover {
-      background: rgba(135, 184, 127, 0.15) !important;
-      border-color: rgba(135, 184, 127, 0.5);
-    }
-
-    .btn-equals {
-      border-color: rgba(135, 184, 127, 0.4);
-      color: white;
-    }
-
-    .btn-equals:hover {
-      background: rgba(135, 184, 127, 0.25) !important;
-      border-color: rgba(135, 184, 127, 0.6);
-    }
-
-    .btn-clear:hover {
-      background: rgba(255, 100, 100, 0.15) !important;
-      border-color: rgba(255, 100, 100, 0.3);
-    }
-
-    @media (max-width: 420px) {
-      .calculator { padding: 16px; }
-      .btn { padding: 12px 6px; font-size: 18px; }
-      .current-operand { font-size: 36px; }
-      .buttons { gap: 8px; }
+    /* Specific icon for backspace */
+    .backspace-icon {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
     }
   </style>
 </head>
 <body>
+
   <div class="calculator">
-    <div class="display">
-      <div class="previous-operand" id="previous"></div>
-      <div class="current-operand" id="current">0</div>
+    <div class="window-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg>
+        <span>Calculator</span>
+      </div>
+      <div style="letter-spacing: 5px; font-size: 12px;">— ▢ ✕</div>
     </div>
-    <div class="buttons">
-      <button class="btn btn-clear" data-action="clear">AC</button>
-      <button class="btn btn-clear" data-action="delete">⌫</button>
-      <button class="btn btn-operator" data-operator="%">%</button>
-      <button class="btn btn-operator" data-operator="/">÷</button>
-      
-      <button class="btn" data-number="7">7</button>
-      <button class="btn" data-number="8">8</button>
-      <button class="btn" data-number="9">9</button>
-      <button class="btn btn-operator" data-operator="*">×</button>
-      
-      <button class="btn" data-number="4">4</button>
-      <button class="btn" data-number="5">5</button>
-      <button class="btn" data-number="6">6</button>
-      <button class="btn btn-operator" data-operator="-">−</button>
-      
-      <button class="btn" data-number="1">1</button>
-      <button class="btn" data-number="2">2</button>
-      <button class="btn" data-number="3">3</button>
-      <button class="btn btn-operator" data-operator="+">+</button>
-      
-      <button class="btn" data-number="0">0</button>
-      <button class="btn" data-number=".">.</button>
-      <button class="btn btn-equals" data-action="equals">=</button>
-      <button class="btn btn-operator" data-operator="^">xⁿ</button>
+
+    <div class="display">
+      <div class="current-operand" id="display">0</div>
+    </div>
+
+    <div class="buttons-grid">
+      <button class="btn" onclick="backspace()">
+        <svg class="backspace-icon" viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>
+      </button>
+      <button class="btn" onclick="clearDisplay()">ac</button>
+      <button class="btn">+/-</button>
+      <button class="btn" onclick="append('/')">/</button>
+
+      <button class="btn" onclick="append('7')">7</button>
+      <button class="btn" onclick="append('8')">8</button>
+      <button class="btn" onclick="append('9')">9</button>
+      <button class="btn" onclick="append('*')">*</button>
+
+      <button class="btn" onclick="append('4')">4</button>
+      <button class="btn" onclick="append('5')">5</button>
+      <button class="btn" onclick="append('6')">6</button>
+      <button class="btn" onclick="append('-')">-</button>
+
+      <button class="btn" onclick="append('1')">1</button>
+      <button class="btn" onclick="append('2')">2</button>
+      <button class="btn" onclick="append('3')">3</button>
+      <button class="btn" onclick="append('+')">+</button>
+
+      <button class="btn" onclick="append('0')">0</button>
+      <button class="btn" onclick="append('.')">.</button>
+      <button class="btn" style="grid-column: span 2;" onclick="calculate()">=</button>
     </div>
   </div>
 
   <script>
-    (function() {
-      let previous = '';
-      let current = '0';
-      let operation = null;
-      let resetScreen = false;
+    let display = document.getElementById('display');
+    let currentInput = '0';
 
-      const previousEl = document.getElementById('previous');
-      const currentEl = document.getElementById('current');
+    function updateDisplay() {
+      display.innerText = currentInput;
+    }
 
-      function updateDisplay() {
-        let displayCurrent = current;
-        if (!isNaN(parseFloat(displayCurrent)) && !displayCurrent.includes('Error')) {
-          const parts = displayCurrent.split('.');
-          parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-          displayCurrent = parts.join('.');
-        }
-        currentEl.textContent = displayCurrent;
-
-        let displayPrevious = '';
-        if (previous !== '') {
-          let formattedPrev = previous;
-          if (!isNaN(parseFloat(formattedPrev))) {
-            const parts = formattedPrev.split('.');
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            formattedPrev = parts.join('.');
-          }
-          const opMap = { '+': '+', '-': '−', '*': '×', '/': '÷', '%': '%', '^': '^' };
-          displayPrevious = `${formattedPrev} ${opMap[operation] || ''}`;
-        }
-        previousEl.textContent = displayPrevious;
+    function append(char) {
+      if (currentInput === '0' && char !== '.') {
+        currentInput = char;
+      } else {
+        currentInput += char;
       }
+      updateDisplay();
+    }
 
-      function appendNumber(num) {
-        if (resetScreen) {
-          current = '';
-          resetScreen = false;
-        }
-        if (num === '.' && current.includes('.')) return;
-        if (current === '0' && num !== '.') {
-          current = num;
-        } else {
-          current += num;
-        }
-        if (current.length > 16) current = current.slice(0, 16);
-        updateDisplay();
+    function clearDisplay() {
+      currentInput = '0';
+      updateDisplay();
+    }
+
+    function backspace() {
+      if (currentInput.length > 1) {
+        currentInput = currentInput.slice(0, -1);
+      } else {
+        currentInput = '0';
       }
+      updateDisplay();
+    }
 
-      function chooseOperation(op) {
-        if (current === '') return;
-        if (previous !== '') compute();
-        operation = op;
-        previous = current;
-        current = '';
-        resetScreen = false;
-        updateDisplay();
+    function calculate() {
+      try {
+        currentInput = eval(currentInput).toString();
+      } catch {
+        currentInput = "Error";
       }
-
-      function compute() {
-        let result;
-        const prev = parseFloat(previous);
-        const curr = parseFloat(current);
-        if (isNaN(prev) || isNaN(curr)) return;
-
-        const ops = {
-          '+': () => prev + curr,
-          '-': () => prev - curr,
-          '*': () => prev * curr,
-          '/': () => prev / curr,
-          '%': () => prev % curr,
-          '^': () => Math.pow(prev, curr)
-        };
-
-        if (ops[operation]) {
-          result = ops[operation]();
-          if (operation === '/' && curr === 0) {
-            current = 'Error';
-            previous = '';
-            operation = null;
-            updateDisplay();
-            setTimeout(() => { current = '0'; updateDisplay(); }, 1200);
-            return;
-          }
-          result = Math.round(result * 10000000000) / 10000000000;
-          current = result.toString().length > 16 ? result.toExponential(8) : result.toString();
-          operation = null;
-          previous = '';
-          resetScreen = true;
-          updateDisplay();
-        }
-      }
-
-      function clear() {
-        current = '0';
-        previous = '';
-        operation = null;
-        resetScreen = false;
-        updateDisplay();
-      }
-
-      function deleteLast() {
-        if (resetScreen) {
-          clear();
-          return;
-        }
-        if (current.length === 1 || current === '0') {
-          current = '0';
-        } else {
-          current = current.slice(0, -1);
-        }
-        updateDisplay();
-      }
-
-      document.querySelectorAll('[data-number]').forEach(btn => {
-        btn.addEventListener('click', () => appendNumber(btn.dataset.number));
-      });
-      document.querySelectorAll('[data-operator]').forEach(btn => {
-        btn.addEventListener('click', () => chooseOperation(btn.dataset.operator));
-      });
-      document.querySelector('[data-action="clear"]').addEventListener('click', clear);
-      document.querySelector('[data-action="delete"]').addEventListener('click', deleteLast);
-      document.querySelector('[data-action="equals"]').addEventListener('click', compute);
-
-      document.addEventListener('keydown', (e) => {
-        const key = e.key;
-        if (/[0-9]/.test(key)) { appendNumber(key); e.preventDefault(); }
-        if (key === '.') { appendNumber('.'); e.preventDefault(); }
-        if (key === '+' || key === '-') { chooseOperation(key); e.preventDefault(); }
-        if (key === '*') { chooseOperation('*'); e.preventDefault(); }
-        if (key === '/') { chooseOperation('/'); e.preventDefault(); }
-        if (key === '%') { chooseOperation('%'); e.preventDefault(); }
-        if (key === '^') { chooseOperation('^'); e.preventDefault(); }
-        if (key === 'Enter' || key === '=') { compute(); e.preventDefault(); }
-        if (key === 'Escape') { clear(); e.preventDefault(); }
-        if (key === 'Backspace') { deleteLast(); e.preventDefault(); }
-      });
-    })();
+      updateDisplay();
+    }
   </script>
 </body>
 </html>
