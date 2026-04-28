@@ -1,15 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Store</title>
-  <link rel="stylesheet" href="store.css" />
-<base target="_blank">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optimistic Store</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --mint: #87b87f;
+    --mint-dark: #5a8a52;
+    --mint-glow: rgba(135,184,127,0.18);
+    --bg: rgba(10,14,10,0.0);
+    --surface: rgba(20,26,20,0.92);
+    --surface2: rgba(28,34,28,0.95);
+    --border: rgba(135,184,127,0.1);
+    --text: #e8eaed;
+    --text-muted: #7a9070;
+    --font: 'Noto Sans', sans-serif;
+    --mono: 'Noto Mono', monospace;
+  }
+
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: var(--font); font-size: 13px; color: var(--text);
+    background: transparent;
+    user-select: none;
+  }
+
+  .store-root {
+    display: flex; flex-direction: column;
+    width: 100%; height: 100%;
+    background: rgba(8,12,8,0.98);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+  }
+
+  /* Top bar */
+  .store-topbar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px;
+    background: rgba(12,16,12,0.9);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .store-logo {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 14px; font-weight: 600; color: var(--mint);
+  }
+  .store-logo svg { width: 18px; height: 18px; fill: var(--mint); }
+  .store-search {
+    flex: 1; max-width: 340px;
+    background: rgba(0,0,0,0.4); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 10px;
+    color: var(--text); font-family: var(--font); font-size: 12px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .store-search:focus { border-color: rgba(135,184,127,0.35); }
+  .store-search::placeholder { color: #3a5a3a; }
+  .store-tabs { display: flex; gap: 2px; margin-left: 4px; }
+  .store-tab {
+    padding: 5px 12px; border-radius: 5px; cursor: pointer;
+    font-size: 12px; color: var(--text-muted); transition: all 0.15s;
+  }
+  .store-tab:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  .store-tab.active { background: var(--mint-glow); color: var(--mint); }
+
+  /* Body */
+  .store-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Featured banner */
+  .store-featured {
+    border-radius: 10px; overflow: hidden;
+    background: linear-gradient(135deg, rgba(45,80,40,0.6), rgba(20,30,20,0.8));
+    border: 1px solid rgba(135,184,127,0.15);
+    padding: 20px 24px;
+    display: flex; align-items: center; gap: 20px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .store-featured::before {
+    content: ''; position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800') center/cover no-repeat;
+    opacity: 0.08; border-radius: 10px;
+  }
+  .feat-icon {
+    width: 64px; height: 64px; border-radius: 14px;
+    object-fit: contain; flex-shrink: 0; position: relative; z-index: 1;
+    background: rgba(0,0,0,0.3); padding: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .feat-info { flex: 1; position: relative; z-index: 1; }
+  .feat-badge { font-size: 10px; color: var(--mint); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .feat-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .feat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+  .feat-install-btn {
+    padding: 9px 20px; border-radius: 7px; cursor: pointer; flex-shrink: 0; position: relative; z-index: 1;
+    background: linear-gradient(135deg, var(--mint), var(--mint-dark));
+    border: none; color: #0a150a; font-family: var(--font); font-size: 13px; font-weight: 700;
+    transition: all 0.2s; letter-spacing: 0.3px;
+  }
+  .feat-install-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(135,184,127,0.3); }
+  .feat-install-btn.installed { background: rgba(135,184,127,0.12); color: var(--mint); border: 1px solid rgba(135,184,127,0.25); }
+
+  /* Section */
+  .store-section-title {
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: -8px;
+  }
+
+  /* App grid */
+  .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+
+  .app-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .app-card:hover { border-color: rgba(135,184,127,0.25); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+
+  .app-card-header {
+    padding: 14px 14px 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .app-card-icon {
+    width: 44px; height: 44px; border-radius: 10px; object-fit: contain; flex-shrink: 0;
+    background: rgba(0,0,0,0.3); padding: 6px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .app-card-meta { flex: 1; min-width: 0; }
+  .app-card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .app-card-category { font-size: 10.5px; color: var(--text-muted); }
+  .app-card-desc { padding: 0 14px 10px; font-size: 11.5px; color: var(--text-muted); line-height: 1.5; flex: 1; }
+  .app-card-footer {
+    padding: 8px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(135,184,127,0.05);
+    background: rgba(0,0,0,0.2);
+  }
+  .app-card-size { font-size: 10.5px; color: #3a5a3a; font-family: var(--mono); }
+  .app-card-rating { font-size: 10.5px; color: #e8a838; }
+
+  .install-btn {
+    padding: 5px 14px; border-radius: 5px; cursor: pointer;
+    background: rgba(135,184,127,0.1); border: 1px solid rgba(135,184,127,0.25);
+    color: var(--mint); font-family: var(--font); font-size: 11.5px; font-weight: 600;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .install-btn:hover { background: rgba(135,184,127,0.2); }
+  .install-btn.installing {
+    background: rgba(135,184,127,0.08); color: var(--text-muted);
+    border-color: rgba(135,184,127,0.1); cursor: default;
+  }
+  .install-btn.installed {
+    background: rgba(135,184,127,0.05); color: #4a6a44;
+    border-color: rgba(135,184,127,0.08); cursor: default;
+  }
+  .install-btn.open-btn {
+    background: var(--mint-glow); color: var(--mint);
+    border-color: rgba(135,184,127,0.3); cursor: pointer;
+  }
+  .install-btn.open-btn:hover { background: rgba(135,184,127,0.25); }
+
+  /* Progress bar inside card during install */
+  .install-progress {
+    height: 2px; background: rgba(135,184,127,0.08);
+    overflow: hidden; flex-shrink: 0;
+  }
+  .install-progress-bar {
+    height: 100%; background: var(--mint);
+    width: 0%; transition: width 0.3s ease;
+    border-radius: 2px;
+  }
+
+  /* Toast */
+  #store-toast {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(20,26,20,0.98); border: 1px solid var(--border);
+    border-left: 3px solid var(--mint);
+    border-radius: 8px; padding: 10px 16px;
+    font-size: 12.5px; color: var(--text);
+    pointer-events: none; z-index: 999;
+    opacity: 0; transition: opacity 0.3s;
+    white-space: nowrap; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  #store-toast.show { opacity: 1; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(135,184,127,0.15); border-radius: 2px; }
+</style>
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module" src="apps.js"></script>
-  <script type="module" src="store.js"></script>
+
+<div class="store-root">
+  <div class="store-topbar">
+    <div class="store-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      Optimistic Store
+    </div>
+    <input type="text" class="store-search" placeholder="Search apps…" id="store-search-input" oninput="filterApps(this.value)">
+    <div class="store-tabs">
+      <div class="store-tab active" data-tab="all" onclick="switchTab(this,'all')">All</div>
+      <div class="store-tab" data-tab="games" onclick="switchTab(this,'games')">Games</div>
+      <div class="store-tab" data-tab="social" onclick="switchTab(this,'social')">Social</div>
+      <div class="store-tab" data-tab="tools" onclick="switchTab(this,'tools')">Tools</div>
+      <div class="store-tab" data-tab="media" onclick="switchTab(this,'media')">Media</div>
+    </div>
+  </div>
+
+  <div class="store-body" id="store-body">
+    <!-- Featured -->
+    <div class="store-featured" id="featured-banner">
+      <img class="feat-icon" src="https://www.roblox.com/favicon.ico" alt="Roblox" id="feat-icon">
+      <div class="feat-info">
+        <div class="feat-badge">⭐ Featured App</div>
+        <div class="feat-title" id="feat-title">Roblox</div>
+        <div class="feat-desc" id="feat-desc">Play millions of 3D experiences with friends on Roblox — the ultimate platform for user-generated games and social experiences.</div>
+      </div>
+      <button class="feat-install-btn" id="feat-install-btn" onclick="installFeatured()">Install</button>
+    </div>
+
+    <div class="store-section-title" id="section-title-all">All Apps</div>
+    <div class="store-grid" id="app-grid"></div>
+  </div>
+</div>
+
+<div id="store-toast"></div>
+
+<script>
+const STORE_INSTALLED_KEY = 'optimistic.store.installed';
+const OPT_CUSTOM_APPS_KEY = 'optimistic.custom.apps';
+
+const STORE_APPS = [
+  {
+    id: 'roblox', name: 'Roblox', category: 'Games',
+    icon: 'https://www.roblox.com/favicon.ico',
+    desc: 'Play millions of 3D user-created games with friends.',
+    url: '/apps/Roblox/index.html',
+    size: '4.2 MB', rating: '★★★★★', featured: true,
+    tab: 'games',
+    iframeUrl: 'https://www.roblox.com'
+  },
+  {
+    id: 'minecraft', name: 'Minecraft', category: 'Games',
+    icon: 'https://www.minecraft.net/favicon.ico',
+    desc: 'Build and explore infinite blocky worlds.',
+    url: '/apps/Minecraft/index.html',
+    size: '8.1 MB', rating: '★★★★★',
+    tab: 'games',
+    iframeUrl: 'https://classic.minecraft.net'
+  },
+  {
+    id: 'youtube', name: 'YouTube', category: 'Media',
+    icon: 'https://www.youtube.com/favicon.ico',
+    desc: 'Stream videos, music and live content from creators worldwide.',
+    url: '/apps/YouTube/index.html',
+    size: '1.1 MB', rating: '★★★★☆',
+    tab: 'media',
+    iframeUrl: 'https://www.youtube.com'
+  },
+  {
+    id: 'discord', name: 'Discord', category: 'Social',
+    icon: 'https://discord.com/favicon.ico',
+    desc: 'Voice, video and text — your community in one place.',
+    url: '/apps/Discord/index.html',
+    size: '2.8 MB', rating: '★★★★★',
+    tab: 'social',
+    iframeUrl: 'https://discord.com/app'
+  },
+  {
+    id: 'spotify', name: 'Spotify', category: 'Media',
+    icon: 'https://open.spotify.com/favicon.ico',
+    desc: 'Millions of songs and podcasts at your fingertips.',
+    url: '/apps/Spotify/index.html',
+    size: '2.0 MB', rating: '★★★★★',
+    tab: 'media',
+    iframeUrl: 'https://open.spotify.com'
+  },
+  {
+    id: 'github', name: 'GitHub', category: 'Tools',
+    icon: 'https://github.com/favicon.ico',
+    desc: 'Host, review and manage your code repositories.',
+    url: '/apps/GitHub/index.html',
+    size: '1.4 MB', rating: '★★★★☆',
+    tab: 'tools',
+    iframeUrl: 'https://github.com'
+  },
+  {
+    id: 'twitter', name: 'X (Twitter)', category: 'Social',
+    icon: 'https://x.com/favicon.ico',
+    desc: 'See what\'s happening in the world right now.',
+    url: '/apps/Twitter/index.html',
+    size: '1.6 MB', rating: '★★★☆☆',
+    tab: 'social',
+    iframeUrl: 'https://x.com'
+  },
+  {
+    id: 'reddit', name: 'Reddit', category: 'Social',
+    icon: 'https://www.reddit.com/favicon.ico',
+    desc: 'Dive into communities for anything and everything.',
+    url: '/apps/Reddit/index.html',
+    size: '1.8 MB', rating: '★★★★☆',
+    tab: 'social',
+    iframeUrl: 'https://www.reddit.com'
+  },
+  {
+    id: 'figma', name: 'Figma', category: 'Tools',
+    icon: 'https://static.figma.com/app/icon/1/favicon.ico',
+    desc: 'Collaborative interface design tool in your browser.',
+    url: '/apps/Figma/index.html',
+    size: '3.2 MB', rating: '★★★★★',
+    tab: 'tools',
+    iframeUrl: 'https://www.figma.com'
+  },
+  {
+    id: 'twitch', name: 'Twitch', category: 'Media',
+    icon: 'https://www.twitch.tv/favicon.ico',
+    desc: 'Watch live gaming, art, music and just chatting streams.',
+    url: '/apps/Twitch/index.html',
+    size: '2.2 MB', rating: '★★★★☆',
+    tab: 'media',
+    iframeUrl: 'https://www.twitch.tv'
+  },
+  {
+    id: 'chess', name: 'Chess.com', category: 'Games',
+    icon: 'https://www.chess.com/favicon.ico',
+    desc: 'Play chess online against players from around the world.',
+    url: '/apps/Chess/index.html',
+    size: '1.5 MB', rating: '★★★★★',
+    tab: 'games',
+    iframeUrl: 'https://www.chess.com'
+  },
+  {
+    id: 'notion', name: 'Notion', category: 'Tools',
+    icon: 'https://www.notion.so/favicon.ico',
+    desc: 'Notes, docs, wikis and project management in one workspace.',
+    url: '/apps/Notion/index.html',
+    size: '2.6 MB', rating: '★★★★☆',
+    tab: 'tools',
+    iframeUrl: 'https://www.notion.so'
+  },
+];
+
+let currentTab = 'all';
+let installedApps = {};
+let installingApps = new Set();
+
+function getInstalled() {
+  try { return JSON.parse(localStorage.getItem(STORE_INSTALLED_KEY) || '{}'); }
+  catch { return {}; }
+}
+function saveInstalled(obj) {
+  localStorage.setItem(STORE_INSTALLED_KEY, JSON.stringify(obj));
+}
+function getCustomApps() {
+  try { return JSON.parse(localStorage.getItem(OPT_CUSTOM_APPS_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveCustomApps(arr) {
+  localStorage.setItem(OPT_CUSTOM_APPS_KEY, JSON.stringify(arr));
+}
+
+function toast(msg) {
+  const el = document.getElementById('store-toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function installApp(appId, btnEl, progressEl) {
+  if (installingApps.has(appId)) return;
+  const app = STORE_APPS.find(a => a.id === appId);
+  if (!app) return;
+
+  installingApps.add(appId);
+  btnEl.textContent = 'Installing…';
+  btnEl.className = 'install-btn installing';
+  btnEl.disabled = true;
+
+  // Fake progress animation
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 18 + 8;
+    if (progress > 95) progress = 95;
+    if (progressEl) progressEl.style.width = progress + '%';
+  }, 150);
+
+  setTimeout(() => {
+    clearInterval(interval);
+    if (progressEl) progressEl.style.width = '100%';
+
+    setTimeout(() => {
+      installingApps.delete(appId);
+      installedApps[appId] = true;
+      saveInstalled(installedApps);
+
+      // Register the app in the OS custom apps registry
+      const customApps = getCustomApps();
+      if (!customApps.find(a => a.id === appId)) {
+        customApps.push({
+          id: appId,
+          label: app.name,
+          icon: app.icon,
+          url: app.url,
+          iframeUrl: app.iframeUrl,
+          category: app.category,
+          installedAt: Date.now()
+        });
+        saveCustomApps(customApps);
+      }
+
+      // Notify parent OS window
+      try {
+        window.parent.postMessage({ type: 'app-installed', app: {
+          id: appId, label: app.name, icon: app.icon,
+          url: app.url, iframeUrl: app.iframeUrl
+        }}, '*');
+      } catch(e) {}
+
+      btnEl.textContent = 'Open';
+      btnEl.className = 'install-btn open-btn';
+      btnEl.disabled = false;
+      btnEl.onclick = () => openInstalledApp(appId);
+      if (progressEl) progressEl.style.width = '0%';
+
+      toast(`✓ ${app.name} installed successfully`);
+    }, 300);
+  }, 1800 + Math.random() * 600);
+}
+
+function openInstalledApp(appId) {
+  try {
+    window.parent.postMessage({ type: 'open-app', appId }, '*');
+  } catch(e) {}
+  toast('Opening app…');
+}
+
+function installFeatured() {
+  const featuredApp = STORE_APPS.find(a => a.featured);
+  if (!featuredApp) return;
+  const btn = document.getElementById('feat-install-btn');
+
+  if (installedApps[featuredApp.id]) {
+    openInstalledApp(featuredApp.id);
+    return;
+  }
+
+  btn.textContent = 'Installing…';
+  btn.disabled = true;
+  installApp(featuredApp.id, btn, null);
+
+  setTimeout(() => {
+    if (installedApps[featuredApp.id]) {
+      btn.textContent = 'Open';
+      btn.className = 'feat-install-btn installed';
+      btn.disabled = false;
+      btn.onclick = () => openInstalledApp(featuredApp.id);
+    }
+  }, 3000);
+}
+
+function renderApps(tab = 'all', filter = '') {
+  const grid = document.getElementById('app-grid');
+  const filtered = STORE_APPS.filter(a => {
+    const matchTab = tab === 'all' || a.tab === tab;
+    const matchFilter = !filter || a.name.toLowerCase().includes(filter.toLowerCase()) || a.desc.toLowerCase().includes(filter.toLowerCase());
+    return matchTab && matchFilter;
+  });
+
+  // Hide featured if filtering
+  document.getElementById('featured-banner').style.display = filter ? 'none' : '';
+
+  grid.innerHTML = filtered.map(app => {
+    const isInstalled = !!installedApps[app.id];
+    const isInstalling = installingApps.has(app.id);
+    const btnClass = isInstalling ? 'installing' : isInstalled ? 'open-btn' : '';
+    const btnText = isInstalling ? 'Installing…' : isInstalled ? 'Open' : 'Install';
+    return `
+      <div class="app-card" id="card-${app.id}">
+        <div class="app-card-header">
+          <img class="app-card-icon" src="${app.icon}" alt="${app.name}" onerror="this.src='data:image/svg+xml,<svg viewBox=\\'0 0 24 24\\' fill=\\'%2387b87f\\' xmlns=\\'http://www.w3.org/2000/svg\\'><path d=\\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z\\'/></svg>'">
+          <div class="app-card-meta">
+            <div class="app-card-name">${app.name}</div>
+            <div class="app-card-category">${app.category}</div>
+          </div>
+        </div>
+        <div class="app-card-desc">${app.desc}</div>
+        <div class="install-progress"><div class="install-progress-bar" id="prog-${app.id}"></div></div>
+        <div class="app-card-footer">
+          <div>
+            <div class="app-card-size">${app.size}</div>
+            <div class="app-card-rating">${app.rating}</div>
+          </div>
+          <button class="install-btn ${btnClass}" id="btn-${app.id}" onclick="handleInstallClick('${app.id}')" ${isInstalling?'disabled':''}>
+            ${btnText}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function handleInstallClick(appId) {
+  if (installedApps[appId]) {
+    openInstalledApp(appId);
+    return;
+  }
+  const btn = document.getElementById('btn-' + appId);
+  const prog = document.getElementById('prog-' + appId);
+  installApp(appId, btn, prog);
+}
+
+function switchTab(el, tab) {
+  document.querySelectorAll('.store-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentTab = tab;
+  const sectionTitle = document.getElementById('section-title-all');
+  if (sectionTitle) {
+    const labels = { all: 'All Apps', games: 'Games', social: 'Social', tools: 'Tools', media: 'Media' };
+    sectionTitle.textContent = labels[tab] || 'All Apps';
+  }
+  renderApps(tab, document.getElementById('store-search-input').value);
+}
+
+function filterApps(val) {
+  renderApps(currentTab, val);
+}
+
+// Init
+installedApps = getInstalled();
+renderApps();
+
+// Update featured button state
+const featApp = STORE_APPS.find(a => a.featured);
+if (featApp && installedApps[featApp.id]) {
+  const btn = document.getElementById('feat-install-btn');
+  if (btn) { btn.textContent = 'Open'; btn.className = 'feat-install-btn installed'; btn.onclick = () => openInstalledApp(featApp.id); }
+}
+</script>
 </body>
 </html>
