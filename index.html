@@ -581,7 +581,7 @@
   .fm-open-dialog-box { background:rgba(14,18,14,0.99); border:1px solid rgba(135,184,127,0.15); border-radius:10px; overflow:hidden; min-width:340px; box-shadow:0 24px 80px rgba(0,0,0,0.7); display:flex; flex-direction:column; }
   .fm-open-dialog-title { padding:14px 16px; font-size:13px; font-weight:500; border-bottom:1px solid rgba(135,184,127,0.06); background:rgba(0,0,0,0.3); }
   .fm-open-dialog-list { max-height:240px; overflow-y:auto; padding:6px 0; }
-  .fm-open-dialog-item { padding:8px 16px; cursor:pointer; font-size:12.5px; display:flex; align-items:center; gap:10px; transition:background 0.12px; }
+  .fm-open-dialog-item { padding:8px 16px; cursor:pointer; font-size:12.5px; display:flex; align-items:center; gap:10px; transition:background 0.12s; }
   .fm-open-dialog-item:hover { background:var(--hover); }
   .fm-open-dialog-item.selected { background:var(--active); color:var(--mint-green); }
   .fm-open-dialog-btns { display:flex; gap:8px; padding:10px 16px; justify-content:flex-end; border-top:1px solid rgba(135,184,127,0.06); }
@@ -591,7 +591,6 @@
   ::-webkit-scrollbar-thumb { background:rgba(135,184,127,0.2); border-radius:3px; }
   ::-webkit-scrollbar-thumb:hover { background:rgba(135,184,127,0.35); }
 
-  /* Desktop icons */
   .desktop-icons { position:absolute; top:12px; left:12px; display:flex; flex-direction:column; gap:8px; }
   .desktop-icon { display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 8px; border-radius:6px; cursor:pointer; width:72px; transition:background 0.15s; }
   .desktop-icon:hover { background:rgba(255,255,255,0.1); }
@@ -605,7 +604,7 @@
   <div class="boot-logo">
     <img src="/images/optimistic.png" alt="Optimistic Logo" style="width:72px; height:72px; filter: drop-shadow(0 0 24px rgba(135,184,127,0.5));">
     <h1>Optimistic</h1>
-    <p>v1 &lt;3</p>
+    <p>v1 <3</p>
   </div>
   <div class="boot-log" id="boot-log"></div>
   <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
@@ -621,7 +620,7 @@
     <div class="login-logo">
       <img src="/images/optimistic.png" alt="Optimistic Logo" style="width:56px; height:56px; filter:drop-shadow(0 0 20px rgba(135,184,127,0.4));">
       <h1>Optimistic</h1>
-      <p>v1 &lt;3</p>
+      <p>v1 <3</p>
     </div>
     <div class="login-options">
       <p class="login-label">Choose how to sign in</p>
@@ -684,8 +683,6 @@
 <div id="desktop">
   <div id="desktop-overlay"></div>
   <div id="windows"></div>
-  <!-- ★ Desktop icons (including installed store apps) -->
-  <div class="desktop-icons" id="desktop-icons"></div>
 
   <div id="context-menu">
     <div class="ctx-item" onclick="openApp('files');closeCtx()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>Open Files</div>
@@ -859,17 +856,21 @@ function addBootLine(text, status, delay) {
 async function runBootSequence() {
   const bar = document.getElementById('boot-bar');
   const statusEl = document.getElementById('boot-status');
+  
   for(let i = 0; i < bootMessages.length; i++) {
     const m = bootMessages[i];
     await addBootLine(m.text, m.status, m.delay);
     bar.style.width = (((i+1)/bootMessages.length)*60) + '%';
     statusEl.textContent = m.text;
   }
+
   await new Promise(r => setTimeout(r, 200));
   bar.style.width = '70%';
   statusEl.textContent = 'Waiting for login...';
+
   let sess = null;
   try { sess = JSON.parse(localStorage.getItem(OPT_SESSION_KEY)||'null'); } catch {}
+
   if(sess && sess.name) {
     currentUser = sess;
     await runOSBootMessages();
@@ -889,6 +890,8 @@ async function runBootSequence() {
 async function runOSBootMessages(isNewLogin) {
   const bar = document.getElementById('boot-bar');
   const statusEl = document.getElementById('boot-status');
+  const log = document.getElementById('boot-log');
+  
   const osMessages = [
     { text: `Welcome back, ${currentUser?.name || 'user'}!`, status: 'ok', delay: 0 },
     { text: 'Loading /calculator', status: 'wait', delay: 100 },
@@ -899,15 +902,19 @@ async function runOSBootMessages(isNewLogin) {
     { text: 'Browser Ready', status: 'ok', delay: 500 },
     { text: 'Restoring user session', status: 'ok', delay: 600 },
   ];
+  
   for(let i = 0; i < osMessages.length; i++) {
     const m = osMessages[i];
     await addBootLine(m.text, m.status, m.delay);
     bar.style.width = (70 + (i/osMessages.length)*30) + '%';
     statusEl.textContent = m.text;
   }
+
   await new Promise(r => setTimeout(r, 400));
   bar.style.width = '100%';
+  
   await new Promise(r => setTimeout(r, 300));
+  
   const bootScr = document.getElementById('boot-screen');
   bootScr.classList.add('fade-out');
   setTimeout(() => {
@@ -927,12 +934,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function checkCookieBanner() {
   const accepted = localStorage.getItem(OPT_COOKIES_KEY);
-  if(!accepted) setTimeout(() => { document.getElementById('cookie-banner').classList.add('open'); }, 3000);
+  if(!accepted) {
+    setTimeout(() => {
+      document.getElementById('cookie-banner').classList.add('open');
+    }, 3000);
+  }
 }
 function acceptCookies() {
   localStorage.setItem(OPT_COOKIES_KEY, 'accepted');
   const el = document.getElementById('cookie-banner');
-  el.style.transition = 'all 0.3s'; el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(20px)';
+  el.style.transition = 'all 0.3s';
+  el.style.opacity = '0';
+  el.style.transform = 'translateX(-50%) translateY(20px)';
   setTimeout(() => el.classList.remove('open'), 300);
   showNotif('Privacy', 'Cookie preferences saved.');
 }
@@ -947,7 +960,13 @@ function spawnLoginParticles() {
   for(let i = 0; i < 20; i++) {
     const span = document.createElement('span');
     const size = Math.random() * 3 + 1;
-    span.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size}px;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.6+0.2};`;
+    span.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      animation-duration:${8 + Math.random()*12}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:${Math.random()*0.6 + 0.2};
+    `;
     container.appendChild(span);
   }
 }
@@ -1006,7 +1025,9 @@ function doLocalLogin() {
   if(!password) { errEl.textContent = 'Please enter a password.'; errEl.classList.add('visible'); return; }
   const users = getUsers();
   if(users[username]) {
-    if(users[username].password !== btoa(password)) { errEl.textContent = 'Incorrect password.'; errEl.classList.add('visible'); return; }
+    if(users[username].password !== btoa(password)) {
+      errEl.textContent = 'Incorrect password.'; errEl.classList.add('visible'); return;
+    }
   } else {
     users[username] = { password: btoa(password), type: 'local' };
     saveUsers(users);
@@ -1155,49 +1176,80 @@ setInterval(updateLockClock, 1000);
 function initBattery() {
   if(navigator.getBattery) {
     navigator.getBattery().then(bat => {
-      batteryLevel = bat.level; batteryCharging = bat.charging; updateBatteryUI();
+      batteryLevel = bat.level;
+      batteryCharging = bat.charging;
+      updateBatteryUI();
       bat.addEventListener('levelchange', () => { batteryLevel=bat.level; batteryCharging=bat.charging; updateBatteryUI(); });
       bat.addEventListener('chargingchange', () => { batteryCharging=bat.charging; updateBatteryUI(); });
     }).catch(() => { batteryLevel=null; updateBatteryUI(); });
-  } else { batteryLevel = null; updateBatteryUI(); }
+  } else {
+    batteryLevel = null; updateBatteryUI();
+  }
 }
 
 function updateBatteryUI() {
   const fill = document.getElementById('bat-fill');
   const text = document.getElementById('bat-pct-text');
+  const svg = document.getElementById('bat-svg');
   if(!fill) return;
-  if(batteryLevel===null) { text.textContent = '?'; fill.style.width = '14px'; fill.setAttribute('fill', '#9aa0a8'); return; }
+  if(batteryLevel===null) {
+    text.textContent = '?';
+    fill.style.width = '14px';
+    fill.setAttribute('fill', '#9aa0a8');
+    return;
+  }
   const pct = Math.round(batteryLevel*100);
   const fillW = Math.max(1, Math.round(batteryLevel*14));
   fill.setAttribute('width', fillW);
   text.textContent = pct + '%';
-  if(batteryCharging) fill.setAttribute('fill', '#28c840');
-  else if(batteryLevel < 0.2) fill.setAttribute('fill', '#ff5f57');
-  else if(batteryLevel < 0.4) fill.setAttribute('fill', '#febc2e');
-  else fill.setAttribute('fill', '#87b87f');
+  if(batteryCharging) {
+    fill.setAttribute('fill', '#28c840');
+  } else if(batteryLevel < 0.2) {
+    fill.setAttribute('fill', '#ff5f57');
+  } else if(batteryLevel < 0.4) {
+    fill.setAttribute('fill', '#febc2e');
+  } else {
+    fill.setAttribute('fill', '#87b87f');
+  }
   const tray = document.getElementById('battery-tray');
   if(tray) tray.title = `Battery: ${pct}%${batteryCharging?' (Charging)':''}`;
 }
 
 function showBatteryInfo() {
   if(batteryLevel===null) { showNotif('Battery','Battery API not available in this browser.'); return; }
-  showNotif('Battery', `${Math.round(batteryLevel*100)}% — ${batteryCharging ? 'Plugged in, charging' : 'On battery'}`);
+  const pct = Math.round(batteryLevel*100);
+  showNotif('Battery', `${pct}% — ${batteryCharging ? 'Plugged in, charging' : 'On battery'}`);
 }
 
 let wispWs = null;
 function connectWisp() {
   try {
     wispWs = new WebSocket('wss://wisp.waved.site/');
-    wispWs.onopen = () => { wispConnected = true; updateWispUI(true); };
-    wispWs.onclose = () => { wispConnected = false; updateWispUI(false); };
-    wispWs.onerror = () => { wispConnected = false; updateWispUI(false); };
-  } catch(e) { wispConnected = false; updateWispUI(false); }
+    wispWs.onopen = () => {
+      wispConnected = true;
+      updateWispUI(true);
+    };
+    wispWs.onclose = () => {
+      wispConnected = false;
+      updateWispUI(false);
+    };
+    wispWs.onerror = () => {
+      wispConnected = false;
+      updateWispUI(false);
+    };
+  } catch(e) {
+    wispConnected = false;
+    updateWispUI(false);
+  }
 }
 
 function updateWispUI(connected) {
   const dot = document.getElementById('wisp-dot');
   const val = document.getElementById('wisp-status-val');
-  if(dot) { dot.style.background = connected ? '#87b87f' : '#ff5f57'; dot.style.animation = connected ? 'pulse 2s infinite' : 'none'; }
+  if(dot) {
+    dot.style.background = connected ? '#87b87f' : '#ff5f57';
+    dot.style.animation = connected ? 'pulse 2s infinite' : 'none';
+  }
   if(val) val.textContent = connected ? 'Connected' : 'Disconnected';
   const wifiIcon = document.querySelector('.tray-icon[title="Network / Wisp"] svg');
   if(wifiIcon) wifiIcon.style.fill = connected ? '#87b87f' : '#9aa0a8';
@@ -1208,15 +1260,33 @@ function toggleWisp() {
   const isOpen = panel.classList.contains('open');
   document.querySelectorAll('#cal-popup,#vol-popup,#start-menu').forEach(e=>e.classList.remove('open'));
   if(isOpen) panel.classList.remove('open');
-  else { panel.classList.add('open'); const val = document.getElementById('wisp-status-val'); if(val) val.textContent = wispConnected ? 'Connected' : 'Disconnected'; if(!wispConnected) connectWisp(); }
+  else {
+    panel.classList.add('open');
+    const val = document.getElementById('wisp-status-val');
+    if(val) val.textContent = wispConnected ? 'Connected' : 'Disconnected';
+    if(!wispConnected) connectWisp();
+  }
 }
 
 function testWisp() {
   const latEl = document.getElementById('wisp-latency');
   if(latEl) latEl.textContent = '…';
-  if(!wispConnected || !wispWs || wispWs.readyState !== 1) { connectWisp(); setTimeout(() => { if(latEl) latEl.textContent = wispConnected ? '~80ms' : 'Timeout'; }, 2000); return; }
+  if(!wispConnected || !wispWs || wispWs.readyState !== 1) {
+    connectWisp();
+    setTimeout(() => {
+      if(latEl) latEl.textContent = wispConnected ? '~80ms' : 'Timeout';
+    }, 2000);
+    return;
+  }
   const start = Date.now();
-  if(latEl) { try { wispWs.send('ping'); setTimeout(() => { latEl.textContent = (Date.now()-start) + 'ms'; }, 100); } catch { latEl.textContent = wispConnected ? '~80ms' : 'Error'; } }
+  if(latEl) {
+    try {
+      wispWs.send('ping');
+      setTimeout(() => { latEl.textContent = (Date.now()-start) + 'ms'; }, 100);
+    } catch {
+      latEl.textContent = wispConnected ? '~80ms' : 'Error';
+    }
+  }
   showNotif('Wisp', wispConnected ? 'Connection healthy.' : 'Not connected — retrying…');
 }
 
@@ -1247,7 +1317,8 @@ renderCal();
 
 function updateVol(v){document.getElementById('vol-pct').textContent=v+'%';}
 function togglePopup(id){
-  const el=document.getElementById(id); const open=el.classList.contains('open');
+  const el=document.getElementById(id);
+  const open=el.classList.contains('open');
   document.querySelectorAll('#cal-popup,#vol-popup,#start-menu,#wisp-panel').forEach(e=>e.classList.remove('open'));
   if(!open)el.classList.add('open');
 }
@@ -1483,6 +1554,7 @@ function fmSaveToDrive(){
   try {
     const tree = getFSTree();
     const allFiles = {};
+    const prefix = OPT_FILES_PREFIX + (currentUser?.name||'anon') + '.';
     const collectFiles = (path) => {
       (tree[path]||[]).forEach(name => {
         const fullPath = path+'/'+name;
@@ -1499,7 +1571,9 @@ function fmSaveToDrive(){
     a.click();
     URL.revokeObjectURL(a.href);
     showNotif('Save to Drive', `Saved ${Object.keys(allFiles).length} file(s) to your downloads.`);
-  } catch(e) { showNotif('Save to Drive', 'Export failed: ' + e.message); }
+  } catch(e) {
+    showNotif('Save to Drive', 'Export failed: ' + e.message);
+  }
 }
 
 function showOSDialog(title,defaultVal,callback){
@@ -1516,7 +1590,7 @@ function showOSDialog(title,defaultVal,callback){
 
 function terminalContent(){
   return `<div class="terminal-body" id="term-body">
-    <div class="terminal-output" style="color:#5a8a52">Optimistic v1 &lt;3</div>
+    <div class="terminal-output" style="color:#5a8a52">Optimistic v1 <3</div>
     <div class="terminal-output" style="color:#4a7a42">Type <span style="color:#87b87f">help</span> for available commands.</div>
     <div class="terminal-output">&nbsp;</div>
   </div>
@@ -1539,12 +1613,12 @@ const termCmds = {
   uname:(args)=>args[0]==='-a'?'Linux optimistic 5.15.0-91-generic #101-Ubuntu SMP x86_64 GNU/Linux':'Linux',
   whoami:()=>currentUser?.name||'user',
   clear:()=>{document.getElementById('term-body').innerHTML='';return null;},
-  neofetch:()=>`<span style="color:#87b87f">         ..          </span> ${currentUser?.name||'user'}@optimistic\n       .PLTJ.        <span style="color:#87b87f">─────────────────</span>\n      &lt;CLT&gt;.6BU:      OS: Optimistic 21.3 Virginia\n     &lt;Cff;&lt;NNJy:     Kernel: 5.15.0-91-generic\n     ;:9&lt;;&amp;9 T&lt;:. .   Shell: bash 5.1.16\n     .&lt;;= T. .9&lt;. :    DE: v1 &lt;3\n      :..  ;=.;:     WM: Mutter (Muffin)\n           :&lt;       CPU: Intel i5-12400 @ 4.4GHz\n                     Memory: 3.1GiB / 16.0GiB\n                     Wisp: ${wispConnected?'Connected':'Disconnected'}`,
+  neofetch:()=>`<span style="color:#87b87f">         ..          </span> ${currentUser?.name||'user'}@optimistic\n       .PLTJ.        <span style="color:#87b87f">─────────────────</span>\n      &lt;CLT&gt;.6BU:      OS: Optimistic 21.3 Virginia\n     &lt;Cff;&lt;NNJy:     Kernel: 5.15.0-91-generic\n     ;:9&lt;;&amp;9 T&lt;:. .   Shell: bash 5.1.16\n     .&lt;;= T. .9&lt;. :    DE: v1 <3\n      :..  ;=.;:     WM: Mutter (Muffin)\n           :&lt;       CPU: Intel i5-12400 @ 4.4GHz\n                     Memory: 3.1GiB / 16.0GiB\n                     Wisp: ${wispConnected?'Connected':'Disconnected'}`,
   mkdir:(args)=>{if(!args[0])return'mkdir: missing operand';const tree=getFSTree();if(!tree[termCwd])tree[termCwd]=[];if(!tree[termCwd].includes(args[0]))tree[termCwd].push(args[0]);if(!tree[termCwd+'/'+args[0]])tree[termCwd+'/'+args[0]]=[];saveFSTree(tree);return'';},
   touch:(args)=>{if(!args[0])return'touch: missing operand';const tree=getFSTree();if(!tree[termCwd])tree[termCwd]=[];if(!tree[termCwd].includes(args[0]))tree[termCwd].push(args[0]);saveFSTree(tree);const prefix=OPT_FILES_PREFIX+(currentUser?.name||'anon')+'.';if(!localStorage.getItem(prefix+'file.'+termCwd+'/'+args[0]))saveFSFile(termCwd+'/'+args[0],'');return'';},
   rm:(args)=>{if(!args[0])return'rm: missing operand';const tree=getFSTree();if(tree[termCwd])tree[termCwd]=tree[termCwd].filter(i=>i!==args[0]);deleteFSFile(termCwd+'/'+args[0]);saveFSTree(tree);return'';},
   top:()=>`Tasks: 182 total, 1 running, 181 sleeping\nCPU: 3.2% us, 0.8% sy\nMem: 3200MiB / 16384MiB`,
-  ps:()=>`  PID TTY   STAT  TIME COMMAND\n  1   ?     Ss    0:01 /sbin/init\n  889 ?     Ssl   0:12 v1 &lt;3 --replace\n  1203 pts/0 Ss    0:00 bash\n  2041 pts/0 R+    0:00 ps`,
+  ps:()=>`  PID TTY   STAT  TIME COMMAND\n  1   ?     Ss    0:01 /sbin/init\n  889 ?     Ssl   0:12 v1 <3 --replace\n  1203 pts/0 Ss    0:00 bash\n  2041 pts/0 R+    0:00 ps`,
   df:()=>`Filesystem     1K-blocks    Used Available Use% Mounted on\n/dev/sda1      488386584 48291004 415268696  11% /`,
   free:()=>`              total    used    free   shared\nMem:       16777216  3276800 13500416    49152\nSwap:       8388608        0  8388608`,
   history:()=>terminalHistory.map((c,i)=>`  ${i+1}  ${c}`).join('\n'),
@@ -1719,9 +1793,9 @@ const SETTINGS_PAGES={
     <div class="settings-row"><div><label>Date Format</label></div><select class="settings-select" data-key="date-format" onchange="saveSettingsPage()"><option>MM/DD/YYYY</option><option>DD/MM/YYYY</option><option>YYYY-MM-DD</option></select></div>
     <div class="settings-row"><div><label>Time Format</label></div><select class="settings-select" data-key="time-format" onchange="saveSettingsPage()"><option>24-hour</option><option>12-hour</option></select></div>
     <div class="settings-row"><div><label>Auto Updates</label></div><div class="toggle on" data-key="auto-updates" onclick="this.classList.toggle('on');saveSettingsPage()"></div></div>
-    <div class="settings-row"><div><label>Version</label><small>Optimistic v1 &lt;3</small></div><button class="settings-btn" onclick="showNotif('Update Manager','System is up to date.')">Check Updates</button></div>
+    <div class="settings-row"><div><label>Version</label><small>Optimistic v1 <3</small></div><button class="settings-btn" onclick="showNotif('Update Manager','System is up to date.')">Check Updates</button></div>
   </div>`,
-  'Privacy':()=>`<div class="settings-group"><h3>Privacy &amp; Cookies</h3>
+  'Privacy':()=>`<div class="settings-group"><h3>Privacy & Cookies</h3>
     <div class="settings-row"><div><label>Cookie Storage</label><small>localStorage for files and settings</small></div><span style="font-size:12px;color:${localStorage.getItem(OPT_COOKIES_KEY)==='accepted'?'var(--mint-green)':'#febc2e'}">${localStorage.getItem(OPT_COOKIES_KEY)==='accepted'?'Accepted':'Not accepted'}</span></div>
     <div class="settings-row"><div><label>Session Storage</label><small>Current login session</small></div><div class="toggle on" data-key="session-storage"></div></div>
     <div class="settings-row"><div><label>Clear All Data</label><small>Removes all files, settings, accounts</small></div><button class="settings-btn" onclick="if(confirm('This will delete ALL data including your account. Continue?')){localStorage.clear();location.reload();}">Clear Data</button></div>
@@ -1818,14 +1892,16 @@ function closeCtx(){document.getElementById('context-menu').classList.remove('op
 
 let winOffsetX=60,winOffsetY=40;
 function closePinnedApp(id) {
-  if (windows[id]) { closeWindow(id); }
+  if (windows[id]) {
+    closeWindow(id);
+  }
 }
 
 function openApp(id){
   if(!currentUser)return;
   const configs={
     files:{title:'Files',w:720,h:480,icon:'M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z',fn:filesContent},
-    terminal:{title:'Terminal',w:660,h:420,icon:'https://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Terminal-Pc-104-icon.png',fn:()=>'<iframe src="https://optimisterminal.up.railway.app/" style="width:100%;height:100%;border:none;background:transparent"></iframe>'},
+    terminal: { title: 'Terminal', w: 660, h: 420, icon: 'https://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Terminal-Pc-104-icon.png', fn: () => { return '<iframe src="https://optimisterminal.up.railway.app/" style="width:100%;height:100%;border:none;background:transparent"></iframe>'; } },
     editor:{title:'Text Editor',w:700,h:520,icon:'https://img.icons8.com/ios_filled/512/40C057/document.png',fn:editorContent},
     calculator:{title:'Calculator',w:360,h:560,icon:'https://i.pinimg.com/564x/ae/bd/9d/aebd9d673c125947c9e3c92407525ca0.jpg',glass:true,fn:()=>'<iframe src="/calculator/index.html" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen"></iframe>'},
     settings:{title:'System Settings',w:700,h:480,icon:'https://img.icons8.com/ios_filled/512/40C057/apple-settings.png',fn:settingsContent},
@@ -1894,112 +1970,6 @@ new MutationObserver(()=>{
   const sc=document.getElementById('settings-content');
   if(sc&&!sc.dataset.settingsWired){sc.dataset.settingsWired='1';sc.addEventListener('change',saveSettingsPage);}
 }).observe(document.body,{childList:true,subtree:true});
-
-// =============================================
-// STORE INTEGRATION — installed apps registry
-// =============================================
-const OPT_CUSTOM_APPS_KEY = 'optimistic.custom.apps';
-
-function getCustomApps() {
-  try { return JSON.parse(localStorage.getItem(OPT_CUSTOM_APPS_KEY) || '[]'); } catch { return []; }
-}
-
-function openCustomApp(appId) {
-  const apps = getCustomApps();
-  const app = apps.find(a => a.id === appId);
-  if (!app) return;
-  if (windows[appId]) {
-    const w = document.getElementById('win-' + appId);
-    w?.classList.remove('minimized');
-    focusWindow(appId);
-    return;
-  }
-  const iframeSrc = app.iframeUrl || app.url;
-  const x = Math.min(60 + (winOffsetX % 180), window.innerWidth - 900 - 20);
-  const y = Math.min(40 + (winOffsetY % 140), window.innerHeight - 640 - 60);
-  winOffsetX += 28; winOffsetY += 28;
-  createWindow(
-    appId, app.label, 900, 640, x, y,
-    () => `<iframe src="${iframeSrc}" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write; autoplay; payment"></iframe>`,
-    app.icon, true
-  );
-  document.getElementById('start-menu')?.classList.remove('open');
-}
-
-function buildInstalledAppsInMenu() {
-  const apps = getCustomApps();
-  const list = document.getElementById('menu-apps-list');
-  if (!list) return;
-  // Remove previously injected items
-  list.querySelectorAll('.installed-app-item, .installed-sep').forEach(el => el.remove());
-  if (!apps.length) return;
-  // Separator
-  const sep = document.createElement('div');
-  sep.className = 'installed-sep';
-  sep.style.cssText = 'height:1px;background:rgba(135,184,127,0.07);margin:4px 8px';
-  list.appendChild(sep);
-  // Label
-  const lbl = document.createElement('div');
-  lbl.className = 'installed-sep';
-  lbl.style.cssText = 'padding:4px 8px 2px;font-size:10px;color:#3a5a3a;text-transform:uppercase;letter-spacing:0.5px;';
-  lbl.textContent = 'Installed';
-  list.appendChild(lbl);
-  // App items
-  apps.forEach(app => {
-    const item = document.createElement('div');
-    item.className = 'menu-app-item installed-app-item';
-    item.innerHTML = `<img src="${app.icon}" width="18" height="18" style="object-fit:contain;flex-shrink:0;border-radius:4px" onerror="this.style.display='none'"><span>${app.label}</span>`;
-    item.onclick = () => { openCustomApp(app.id); toggleMenu(); };
-    list.appendChild(item);
-  });
-}
-
-function addInstalledAppDesktopIcon(app) {
-  const desktopIcons = document.getElementById('desktop-icons');
-  if (!desktopIcons) return;
-  if (desktopIcons.querySelector(`[data-appid="${app.id}"]`)) return;
-  const icon = document.createElement('div');
-  icon.className = 'desktop-icon';
-  icon.dataset.appid = app.id;
-  icon.ondblclick = () => openCustomApp(app.id);
-  icon.innerHTML = `<img src="${app.icon}" width="40" height="40" style="object-fit:contain;border-radius:10px;background:rgba(0,0,0,0.3);padding:4px" onerror="this.style.display='none'"><span>${app.label}</span>`;
-  desktopIcons.appendChild(icon);
-}
-
-function restoreInstalledAppsDesktopIcons() {
-  getCustomApps().forEach(app => addInstalledAppDesktopIcon(app));
-}
-
-// Listen for messages from the store iframe
-window.addEventListener('message', (e) => {
-  if (!e.data || typeof e.data !== 'object') return;
-  if (e.data.type === 'app-installed') {
-    const app = e.data.app;
-    showNotif('Store', `${app.label} installed! Find it in Start Menu & desktop.`);
-    buildInstalledAppsInMenu();
-    addInstalledAppDesktopIcon(app);
-  }
-  if (e.data.type === 'open-app') {
-    openCustomApp(e.data.appId);
-  }
-});
-
-// Patch enterDesktop to restore installed apps on load
-const _origEnterDesktop = enterDesktop;
-enterDesktop = function() {
-  _origEnterDesktop.apply(this, arguments);
-  setTimeout(() => {
-    buildInstalledAppsInMenu();
-    restoreInstalledAppsDesktopIcons();
-  }, 300);
-};
-
-// Patch buildMenuList to always show installed apps
-const _origBuildMenuList = buildMenuList;
-buildMenuList = function(filter) {
-  _origBuildMenuList.apply(this, arguments);
-  buildInstalledAppsInMenu();
-};
 </script>
 </body>
 </html>
