@@ -14,6 +14,20 @@ export const addressInput = document.getElementById("address");
 let scramjet = null;
 let scramjetLoadPromise = null;
 
+const isInIframe = window.self !== window.top;
+let iframeMode = false;
+
+if (isInIframe) {
+  try {
+    void window.parent.location.href;
+  } catch (e) {
+    iframeMode = true;
+    Object.defineProperty(window, 'parent', { get: () => window.self, configurable: true });
+    Object.defineProperty(window, 'top', { get: () => window.self, configurable: true });
+    Object.defineProperty(window, 'opener', { get: () => null, configurable: true });
+  }
+}
+
 async function loadScramjet() {
     if (scramjet) return scramjet;
     if (scramjetLoadPromise) return scramjetLoadPromise;
