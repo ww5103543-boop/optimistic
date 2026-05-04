@@ -31,133 +31,6 @@
 
   html, body { width:100%; height:100%; overflow:hidden; font-family:var(--desktop-font); font-size:13px; color:var(--text); user-select:none; }
 
-  #boot-screen {
-    position:fixed; inset:0; z-index:200000;
-    background:#080c08;
-    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:0;
-    transition:opacity 0.6s ease;
-  }
-  #boot-screen.fade-out { opacity:0; pointer-events:none; }
-  #boot-screen.hidden { display:none; }
-  .boot-logo {
-    display:flex; flex-direction:column; align-items:center; gap:16px;
-    margin-bottom:48px;
-  }
-  .boot-logo svg { width:72px; height:72px; filter: drop-shadow(0 0 24px rgba(135,184,127,0.5)); }
-  .boot-logo h1 { font-size:28px; font-weight:300; letter-spacing:6px; color:#fff; }
-  .boot-logo p { font-size:11px; color:#4a6b46; letter-spacing:3px; }
-  .boot-log {
-    font-family:var(--mono-font); font-size:12px;
-    width:480px; max-height:200px; overflow:hidden;
-    color:#4a8a46;
-    display:flex; flex-direction:column; gap:3px;
-    padding:16px; background:rgba(255,255,255,0.03); border-radius:6px;
-    border:1px solid rgba(135,184,127,0.08);
-  }
-  .boot-line {
-    opacity:0; transform:translateY(4px);
-    transition:opacity 0.2s, transform 0.2s;
-    display:flex; gap:8px; align-items:center;
-  }
-  .boot-line.visible { opacity:1; transform:translateY(0); }
-  .boot-line .bl-ok { color:#87b87f; }
-  .boot-line .bl-wait { color:#e8a838; }
-  .boot-line .bl-err { color:#ff5f57; }
-  .boot-bar-wrap { margin-top:24px; width:280px; height:2px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
-  .boot-bar { height:100%; background:var(--mint-green); width:0; transition:width 0.3s ease; border-radius:2px; }
-  .boot-status { margin-top:10px; font-size:11px; color:#4a6b46; letter-spacing:1px; font-family:var(--mono-font); }
-
-  #login-screen {
-    position:fixed; inset:0; z-index:99998;
-    background:#0a0f0a;
-    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:0;
-    transition:opacity 0.5s ease;
-  }
-  #login-screen.fade-out { opacity:0; pointer-events:none; }
-  #login-screen.hidden { display:none; }
-
-  .login-bg {
-    position:absolute; inset:0;
-    background:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format') center/cover no-repeat;
-    opacity:0.18;
-    animation:bgDrift 30s ease-in-out infinite alternate;
-  }
-  @keyframes bgDrift { from{transform:scale(1) translate(0,0);} to{transform:scale(1.05) translate(-10px,-5px);} }
-
-  .login-particles { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
-  .login-particles span {
-    position:absolute; width:2px; height:2px; background:rgba(135,184,127,0.4);
-    border-radius:50%; animation:float linear infinite;
-  }
-  @keyframes float { 0%{transform:translateY(100vh) rotate(0deg);opacity:0;} 10%{opacity:1;} 90%{opacity:1;} 100%{transform:translateY(-20px) rotate(720deg);opacity:0;} }
-
-  .login-vignette {
-    position:absolute; inset:0;
-    background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
-  }
-
-  .login-box {
-    position:relative; z-index:1;
-    background:rgba(12,16,12,0.88);
-    backdrop-filter:blur(32px);
-    border:1px solid rgba(135,184,127,0.15);
-    border-radius:16px;
-    padding:40px 48px;
-    width:400px;
-    display:flex; flex-direction:column; align-items:center; gap:28px;
-    box-shadow:0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(135,184,127,0.05), inset 0 1px 0 rgba(255,255,255,0.05);
-    animation:loginIn 0.6s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  @keyframes loginIn { from{opacity:0;transform:translateY(30px) scale(0.95);} to{opacity:1;transform:translateY(0) scale(1);} }
-
-  .login-logo { display:flex; flex-direction:column; align-items:center; gap:10px; }
-  .login-logo svg { width:56px; height:56px; filter:drop-shadow(0 0 20px rgba(135,184,127,0.4)); }
-  .login-logo h1 { font-size:22px; font-weight:300; letter-spacing:4px; color:#fff; }
-  .login-logo p { font-size:10px; color:#4a6b46; letter-spacing:3px; }
-
-  .login-options { width:100%; display:flex; flex-direction:column; gap:12px; }
-  .login-label { font-size:11px; color:var(--text-muted); text-align:center; margin-bottom:-4px; letter-spacing:0.5px; }
-  .login-btn {
-    width:100%; padding:11px 16px;
-    border-radius:8px; border:1px solid rgba(255,255,255,0.08);
-    background:rgba(255,255,255,0.04);
-    color:var(--text); font-family:var(--desktop-font); font-size:13px; font-weight:500;
-    cursor:pointer; transition:all 0.2s;
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    position:relative; overflow:hidden;
-  }
-  .login-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,0.05), transparent); opacity:0; transition:opacity 0.2s; }
-  .login-btn:hover::before { opacity:1; }
-  .login-btn:hover { border-color:rgba(255,255,255,0.15); transform:translateY(-1px); }
-  .login-btn.local { background:rgba(135,184,127,0.1); border-color:rgba(135,184,127,0.25); }
-  .login-btn.local:hover { background:rgba(135,184,127,0.18); box-shadow:0 4px 20px rgba(135,184,127,0.15); }
-  .login-sep { width:100%; display:flex; align-items:center; gap:12px; }
-  .login-sep::before, .login-sep::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
-  .login-sep span { font-size:11px; color:#3a4a3a; }
-  .login-btn img { width:18px; height:18px; object-fit:contain; }
-  #local-form { width:100%; display:none; flex-direction:column; gap:10px; }
-  #local-form.visible { display:flex; }
-  .login-input {
-    width:100%; padding:10px 14px;
-    background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.08);
-    border-radius:6px; color:var(--text);
-    font-family:var(--desktop-font); font-size:13px; outline:none;
-    transition:border-color 0.2s, box-shadow 0.2s;
-  }
-  .login-input:focus { border-color:rgba(135,184,127,0.5); box-shadow:0 0 0 3px rgba(135,184,127,0.08); }
-  .login-input::placeholder { color:#3a4a3a; }
-  .login-submit {
-    width:100%; padding:11px;
-    background:linear-gradient(135deg, #87b87f, #5a8a52); border:none; border-radius:6px;
-    color:#0a150a; font-family:var(--desktop-font); font-size:13px; font-weight:700;
-    cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
-  }
-  .login-submit:hover { filter:brightness(1.1); transform:translateY(-1px); box-shadow:0 4px 20px rgba(135,184,127,0.3); }
-  .login-back-btn { background:none; border:none; color:#4a5a4a; font-family:var(--desktop-font); font-size:12px; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
-  .login-back-btn:hover { color:var(--text-muted); }
-  .login-error { font-size:12px; color:#ff7070; text-align:center; display:none; }
-  .login-error.visible { display:block; }
-
   #lock-screen {
     position:fixed; inset:0; z-index:99995;
     background:rgba(0,0,0,0.9);
@@ -591,69 +464,14 @@
   ::-webkit-scrollbar-thumb { background:rgba(135,184,127,0.2); border-radius:3px; }
   ::-webkit-scrollbar-thumb:hover { background:rgba(135,184,127,0.35); }
 
-  /* Desktop icons */
   .desktop-icons { position:absolute; top:12px; left:12px; display:flex; flex-direction:column; gap:8px; }
   .desktop-icon { display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 8px; border-radius:6px; cursor:pointer; width:72px; transition:background 0.15s; }
   .desktop-icon:hover { background:rgba(255,255,255,0.1); }
   .desktop-icon span { font-size:11px; color:#fff; text-align:center; line-height:1.3; text-shadow:0 1px 6px rgba(0,0,0,0.9); word-break:break-word; }
 </style>
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
-
-<div id="boot-screen">
-  <div class="boot-logo">
-    <img src="/images/optimistic.png" alt="Optimistic Logo" style="width:72px; height:72px; filter: drop-shadow(0 0 24px rgba(135,184,127,0.5));">
-    <h1>Optimistic</h1>
-    <p>v1 &lt;3</p>
-  </div>
-  <div class="boot-log" id="boot-log"></div>
-  <div class="boot-bar-wrap"><div class="boot-bar" id="boot-bar"></div></div>
-  <div class="boot-status" id="boot-status">Initializing...</div>
-</div>
-
-<div id="login-screen" class="hidden">
-  <div class="login-bg"></div>
-  <div class="login-particles" id="login-particles"></div>
-  <div class="login-vignette"></div>
-
-  <div class="login-box" id="login-box-main">
-    <div class="login-logo">
-      <img src="/images/optimistic.png" alt="Optimistic Logo" style="width:56px; height:56px; filter:drop-shadow(0 0 20px rgba(135,184,127,0.4));">
-      <h1>Optimistic</h1>
-      <p>v1 &lt;3</p>
-    </div>
-    <div class="login-options">
-      <p class="login-label">Choose how to sign in</p>
-      <button class="login-btn local" onclick="showLocalForm()">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
-        Continue Locally
-      </button>
-      <div class="login-sep"><span>or</span></div>
-      <button class="login-btn google" onclick="triggerGoogleLogin()">
-        <img src="https://www.google.com/favicon.ico" alt="Google"> Sign in with Google
-      </button>
-      <div id="g_id_onload" data-client_id="1089050668396-dtjkqfeubs1ipctdf2pla1an8cq5gtu8.apps.googleusercontent.com" data-callback="onGoogleSignIn" data-auto_prompt="false" style="display:none"></div>
-      <div id="g_id_signin" style="display:none"></div>
-    </div>
-  </div>
-
-  <div class="login-box" id="login-box-local" style="display:none">
-    <div class="login-logo">
-      <img src="/images/optimistic.png" alt="Optimistic Logo" style="width:56px; height:56px; filter:drop-shadow(0 0 20px rgba(135,184,127,0.4));">
-      <h1>Local Account</h1>
-      <p>SAVED TO THIS BROWSER</p>
-    </div>
-    <div id="local-form" class="visible">
-      <input type="text" class="login-input" id="local-username" placeholder="Username" autocomplete="off">
-      <input type="password" class="login-input" id="local-password" placeholder="Password">
-      <div class="login-error" id="local-error">Incorrect username or password.</div>
-      <button class="login-submit" onclick="doLocalLogin()">Sign In / Create Account</button>
-      <button class="login-back-btn" onclick="backToMain()">← Back</button>
-    </div>
-  </div>
-</div>
 
 <div id="lock-screen">
   <div class="lock-bg"></div>
@@ -674,7 +492,7 @@
   <span class="cookie-icon"></span>
   <div class="cookie-text">
     <strong>This browser stores your data</strong>
-    <span>Optimistic uses localStorage to save your account, files, and settings on this device.</span>
+    <span>Optimistic uses localStorage to save your files and settings on this device.</span>
   </div>
   <div class="cookie-btns">
     <button class="cookie-btn accept" onclick="acceptCookies()">Accept</button>
@@ -685,7 +503,6 @@
 <div id="desktop">
   <div id="desktop-overlay"></div>
   <div id="windows"></div>
-  <!-- ★ Desktop icons (including installed store apps) -->
   <div class="desktop-icons" id="desktop-icons"></div>
 
   <div id="context-menu">
@@ -741,7 +558,6 @@
       <div class="menu-apps-list" id="menu-apps-list"></div>
       <div class="menu-bottom">
         <div class="menu-bottom-btn" onclick="lockScreen()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>Lock</div>
-        <div class="menu-bottom-btn" onclick="doLogout()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>Log Out</div>
         <div class="menu-bottom-btn" onclick="showNotif('Power','Shutting down…')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>Power</div>
       </div>
     </div>
@@ -749,7 +565,7 @@
       <div class="menu-user">
         <div class="menu-avatar" id="menu-avatar-el">U</div>
         <div class="menu-user-info">
-          <div class="name" id="menu-username-el">user</div>
+          <div class="name" id="menu-username-el">User</div>
           <div class="type" id="menu-usertype-el">Local Account</div>
         </div>
       </div>
@@ -806,8 +622,6 @@
 </div>
 
 <script>
-const OPT_USERS_KEY = 'optimistic.users';
-const OPT_SESSION_KEY = 'optimistic.session';
 const OPT_FILES_PREFIX = 'optimistic.fs.';
 const OPT_EDITOR_KEY = 'optimistic.editor.text';
 const OPT_SETTINGS_KEY = 'optimistic.settings';
@@ -815,7 +629,10 @@ const OPT_WIN_KEY = 'optimistic.windows';
 const OPT_WALLPAPER_KEY = 'optimistic.wallpaper';
 const OPT_COOKIES_KEY = 'optimistic.cookies.accepted';
 
-let currentUser = null;
+// ── Auto-login as local guest ──────────────────────────────────────────────
+let currentUser = { name: 'User', type: 'local' };
+buildDefaultFS('User');
+
 let zTop = 200;
 let windows = {};
 let focused = null;
@@ -828,133 +645,21 @@ let activeWallpaper = 0;
 let batteryLevel = null;
 let batteryCharging = false;
 let wispConnected = false;
-let wispPingStart = 0;
-
-const bootMessages = [
-  { text: 'Loading kernel modules', delay: 0, status: 'ok' },
-  { text: 'Mounting filesystems', delay: 100, status: 'ok' },
-  { text: 'Starting udev', delay: 200, status: 'ok' },
-  { text: 'Initializing network interfaces', delay: 300, status: 'ok' },
-  { text: 'Loading desktop environment', delay: 400, status: 'ok' },
-  { text: 'Checking localStorage availability', delay: 500, status: 'ok' },
-  { text: 'Loading user session manager', delay: 600, status: 'ok' },
-];
-
-function addBootLine(text, status, delay) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      const log = document.getElementById('boot-log');
-      const line = document.createElement('div');
-      line.className = 'boot-line';
-      const statusColors = { ok: 'bl-ok', wait: 'bl-wait', err: 'bl-err' };
-      const statusSymbols = { ok: '[ OK ]', wait: '[ .. ]', err: '[FAIL]' };
-      line.innerHTML = `<span class="${statusColors[status]||'bl-ok'}">${statusSymbols[status]||'[ OK ]'}</span> ${text}`;
-      log.appendChild(line);
-      requestAnimationFrame(() => { setTimeout(() => line.classList.add('visible'), 10); });
-      log.scrollTop = log.scrollHeight;
-      resolve();
-    }, delay);
-  });
-}
-
-async function runBootSequence() {
-  const bar = document.getElementById('boot-bar');
-  const statusEl = document.getElementById('boot-status');
-  for(let i = 0; i < bootMessages.length; i++) {
-    const m = bootMessages[i];
-    await addBootLine(m.text, m.status, m.delay);
-    bar.style.width = (((i+1)/bootMessages.length)*60) + '%';
-    statusEl.textContent = m.text;
-  }
-  await new Promise(r => setTimeout(r, 200));
-  bar.style.width = '70%';
-  statusEl.textContent = 'Waiting for login...';
-  let sess = null;
-  try { sess = JSON.parse(localStorage.getItem(OPT_SESSION_KEY)||'null'); } catch {}
-  if(sess && sess.name) {
-    currentUser = sess;
-    await runOSBootMessages();
-  } else {
-    await new Promise(r => setTimeout(r, 300));
-    const bootScr = document.getElementById('boot-screen');
-    bootScr.classList.add('fade-out');
-    setTimeout(() => {
-      bootScr.classList.add('hidden');
-      const loginScr = document.getElementById('login-screen');
-      loginScr.classList.remove('hidden');
-      spawnLoginParticles();
-    }, 600);
-  }
-}
-
-async function runOSBootMessages(isNewLogin) {
-  const bar = document.getElementById('boot-bar');
-  const statusEl = document.getElementById('boot-status');
-  const osMessages = [
-    { text: `Welcome back, ${currentUser?.name || 'user'}!`, status: 'ok', delay: 0 },
-    { text: 'Loading /calculator', status: 'wait', delay: 100 },
-    { text: 'Calculator /calculator/', status: 'ok', delay: 500 },
-    { text: 'Loading Terminal (Not static)', status: 'wait', delay: 200 },
-    { text: 'Terminal Ready', status: 'ok', delay: 300 },
-    { text: 'Loading browser (Scramjet)', status: 'wait', delay: 400 },
-    { text: 'Browser Ready', status: 'ok', delay: 500 },
-    { text: 'Restoring user session', status: 'ok', delay: 600 },
-  ];
-  for(let i = 0; i < osMessages.length; i++) {
-    const m = osMessages[i];
-    await addBootLine(m.text, m.status, m.delay);
-    bar.style.width = (70 + (i/osMessages.length)*30) + '%';
-    statusEl.textContent = m.text;
-  }
-  await new Promise(r => setTimeout(r, 400));
-  bar.style.width = '100%';
-  await new Promise(r => setTimeout(r, 300));
-  const bootScr = document.getElementById('boot-screen');
-  bootScr.classList.add('fade-out');
-  setTimeout(() => {
-    bootScr.classList.add('hidden');
-    document.getElementById('login-screen').classList.add('hidden');
-    enterDesktop();
-  }, 600);
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  spawnLoginParticles();
-  runBootSequence();
-  checkCookieBanner();
-  initBattery();
-  connectWisp();
-});
 
 function checkCookieBanner() {
   const accepted = localStorage.getItem(OPT_COOKIES_KEY);
-  if(!accepted) setTimeout(() => { document.getElementById('cookie-banner').classList.add('open'); }, 3000);
+  if(!accepted) setTimeout(() => { document.getElementById('cookie-banner').classList.add('open'); }, 2000);
 }
 function acceptCookies() {
   localStorage.setItem(OPT_COOKIES_KEY, 'accepted');
   const el = document.getElementById('cookie-banner');
   el.style.transition = 'all 0.3s'; el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(20px)';
   setTimeout(() => el.classList.remove('open'), 300);
-  showNotif('Privacy', 'Cookie preferences saved.');
 }
 function declineCookies() {
   localStorage.setItem(OPT_COOKIES_KEY, 'declined');
   document.getElementById('cookie-banner').classList.remove('open');
 }
-
-function spawnLoginParticles() {
-  const container = document.getElementById('login-particles');
-  if(!container) return;
-  for(let i = 0; i < 20; i++) {
-    const span = document.createElement('span');
-    const size = Math.random() * 3 + 1;
-    span.style.cssText = `left:${Math.random()*100}%;width:${size}px;height:${size}px;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*0.6+0.2};`;
-    container.appendChild(span);
-  }
-}
-
-function getUsers() { try { return JSON.parse(localStorage.getItem(OPT_USERS_KEY)||'{}'); } catch { return {}; } }
-function saveUsers(u) { localStorage.setItem(OPT_USERS_KEY, JSON.stringify(u)); }
 
 function buildDefaultFS(username) {
   const prefix = OPT_FILES_PREFIX + username + '.';
@@ -988,122 +693,17 @@ function deleteFSFile(path) {
   localStorage.removeItem(prefix+'file.'+path);
 }
 
-function showLocalForm() {
-  document.getElementById('login-box-main').style.display = 'none';
-  document.getElementById('login-box-local').style.display = 'flex';
-  setTimeout(() => document.getElementById('local-username').focus(), 50);
-}
-function backToMain() {
-  document.getElementById('login-box-main').style.display = 'flex';
-  document.getElementById('login-box-local').style.display = 'none';
-  document.getElementById('local-error').classList.remove('visible');
-}
-
-function doLocalLogin() {
-  const username = document.getElementById('local-username').value.trim();
-  const password = document.getElementById('local-password').value;
-  const errEl = document.getElementById('local-error');
-  if(!username) { errEl.textContent = 'Please enter a username.'; errEl.classList.add('visible'); return; }
-  if(!password) { errEl.textContent = 'Please enter a password.'; errEl.classList.add('visible'); return; }
-  const users = getUsers();
-  if(users[username]) {
-    if(users[username].password !== btoa(password)) { errEl.textContent = 'Incorrect password.'; errEl.classList.add('visible'); return; }
-  } else {
-    users[username] = { password: btoa(password), type: 'local' };
-    saveUsers(users);
-  }
-  buildDefaultFS(username);
-  currentUser = { name: username, type: 'local' };
-  localStorage.setItem(OPT_SESSION_KEY, JSON.stringify(currentUser));
-  errEl.classList.remove('visible');
-  const loginScr = document.getElementById('login-screen');
-  const bootScr = document.getElementById('boot-screen');
-  loginScr.classList.add('fade-out');
-  setTimeout(() => {
-    loginScr.classList.add('hidden');
-    bootScr.classList.remove('hidden');
-    bootScr.classList.remove('fade-out');
-    document.getElementById('boot-log').innerHTML = '';
-    document.getElementById('boot-bar').style.width = '70%';
-    runOSBootMessages(true);
-  }, 500);
-}
-
-function triggerGoogleLogin() {
-  google.accounts.id.initialize({ client_id: '1089050668396-dtjkqfeubs1ipctdf2pla1an8cq5gtu8.apps.googleusercontent.com', callback: onGoogleSignIn });
-  google.accounts.id.prompt(n => {
-    if(n.isNotDisplayed() || n.isSkippedMoment()) {
-      google.accounts.id.renderButton(document.getElementById('g_id_signin'), { theme:'outline', size:'large' });
-      document.getElementById('g_id_signin').style.display='block';
-      document.getElementById('g_id_signin').querySelector('div[role=button]')?.click();
-    }
-  });
-}
-
-function onGoogleSignIn(response) {
-  try {
-    const p = JSON.parse(atob(response.credential.split('.')[1]));
-    const storageKey = 'google_' + p.email.replace(/[^a-z0-9]/gi,'_');
-    buildDefaultFS(storageKey);
-    currentUser = { name: p.name||p.email, type:'google', email:p.email, avatar:p.picture, storageKey };
-    localStorage.setItem(OPT_SESSION_KEY, JSON.stringify(currentUser));
-    const loginScr = document.getElementById('login-screen');
-    const bootScr = document.getElementById('boot-screen');
-    loginScr.classList.add('fade-out');
-    setTimeout(() => {
-      loginScr.classList.add('hidden');
-      bootScr.classList.remove('hidden');
-      bootScr.classList.remove('fade-out');
-      document.getElementById('boot-log').innerHTML = '';
-      document.getElementById('boot-bar').style.width = '70%';
-      runOSBootMessages(true);
-    }, 500);
-  } catch(e) { showNotif('Google Sign-In', 'Failed: ' + e.message); }
-}
-
-function enterDesktop() {
-  updateUserUI();
-  loadWallpaper();
-  restoreOSWindows();
-  osStateLoaded = true;
-  document.getElementById('desktop').classList.add('loaded');
-  setTimeout(() => showNotif('Welcome to Optimistic', 'Hello, ' + (currentUser?.name||'User') + '! '), 500);
-  checkCookieBanner();
-}
-
-function doLogout() {
-  localStorage.removeItem(OPT_SESSION_KEY);
-  currentUser = null;
-  Object.keys(windows).forEach(id => {
-    const win = document.getElementById('win-'+id); if(win) win.remove();
-    const btn = document.getElementById('tb-'+id); if(btn) btn.remove();
-  });
-  windows = {};
-  document.getElementById('desktop').classList.remove('loaded');
-  document.getElementById('start-menu').classList.remove('open');
-  const loginScr = document.getElementById('login-screen');
-  loginScr.classList.remove('hidden');
-  loginScr.classList.remove('fade-out');
-  document.getElementById('login-box-main').style.display='flex';
-  document.getElementById('login-box-local').style.display='none';
-}
-
 function updateUserUI() {
-  if(!currentUser) return;
   const nameEl = document.getElementById('menu-username-el');
   const typeEl = document.getElementById('menu-usertype-el');
   const avatarEl = document.getElementById('menu-avatar-el');
   if(nameEl) nameEl.textContent = currentUser.name;
-  if(typeEl) typeEl.textContent = currentUser.type==='google' ? 'Google Account' : 'Local Account';
-  if(avatarEl) { avatarEl.innerHTML = currentUser.avatar ? `<img src="${currentUser.avatar}">` : (currentUser.name||'?')[0].toUpperCase(); }
+  if(typeEl) typeEl.textContent = 'Local Account';
+  if(avatarEl) avatarEl.innerHTML = (currentUser.name||'?')[0].toUpperCase();
   document.getElementById('lock-name').textContent = currentUser.name;
   const la = document.getElementById('lock-avatar');
-  if(la) { la.innerHTML = currentUser.avatar ? `<img src="${currentUser.avatar}" style="width:100%;height:100%;object-fit:cover;">` : (currentUser.name||'?')[0].toUpperCase(); }
+  if(la) la.innerHTML = (currentUser.name||'?')[0].toUpperCase();
 }
-
-document.addEventListener('keydown', e => {
-  if(e.key==='Enter' && document.getElementById('login-box-local')?.style.display !== 'none') doLocalLogin();
-});
 
 function lockScreen() {
   document.getElementById('start-menu').classList.remove('open');
@@ -1112,29 +712,9 @@ function lockScreen() {
   updateLockClock();
 }
 function doUnlock() {
-  const pw = document.getElementById('lock-password').value;
-  const errEl = document.getElementById('lock-error');
-  if(!pw) { errEl.textContent='Please enter your password.'; errEl.classList.add('visible'); return; }
-  const users = getUsers();
-  if(currentUser?.type==='google') {
-    document.getElementById('lock-screen').classList.remove('open');
-    document.getElementById('lock-password').value='';
-    errEl.classList.remove('visible');
-    return;
-  }
-  const u = users[currentUser?.name];
-  if(u && u.password === btoa(pw)) {
-    document.getElementById('lock-screen').classList.remove('open');
-    document.getElementById('lock-password').value='';
-    errEl.classList.remove('visible');
-    showNotif('Welcome back', currentUser.name + '!');
-  } else {
-    errEl.textContent='Incorrect password.';
-    errEl.classList.add('visible');
-    const inp = document.getElementById('lock-password');
-    inp.style.borderColor='#ff5f57';
-    setTimeout(() => { inp.style.borderColor=''; inp.value=''; }, 1000);
-  }
+  document.getElementById('lock-screen').classList.remove('open');
+  document.getElementById('lock-password').value = '';
+  document.getElementById('lock-error').classList.remove('visible');
 }
 document.addEventListener('keydown', e => {
   if(e.key==='Enter' && document.getElementById('lock-screen').classList.contains('open')) doUnlock();
@@ -1162,7 +742,6 @@ function initBattery() {
     }).catch(() => { batteryLevel=null; updateBatteryUI(); });
   } else { batteryLevel = null; updateBatteryUI(); }
 }
-
 function updateBatteryUI() {
   const fill = document.getElementById('bat-fill');
   const text = document.getElementById('bat-pct-text');
@@ -1179,7 +758,6 @@ function updateBatteryUI() {
   const tray = document.getElementById('battery-tray');
   if(tray) tray.title = `Battery: ${pct}%${batteryCharging?' (Charging)':''}`;
 }
-
 function showBatteryInfo() {
   if(batteryLevel===null) { showNotif('Battery','Battery API not available in this browser.'); return; }
   showNotif('Battery', `${Math.round(batteryLevel*100)}% — ${batteryCharging ? 'Plugged in, charging' : 'On battery'}`);
@@ -1194,7 +772,6 @@ function connectWisp() {
     wispWs.onerror = () => { wispConnected = false; updateWispUI(false); };
   } catch(e) { wispConnected = false; updateWispUI(false); }
 }
-
 function updateWispUI(connected) {
   const dot = document.getElementById('wisp-dot');
   const val = document.getElementById('wisp-status-val');
@@ -1203,7 +780,6 @@ function updateWispUI(connected) {
   const wifiIcon = document.querySelector('.tray-icon[title="Network / Wisp"] svg');
   if(wifiIcon) wifiIcon.style.fill = connected ? '#87b87f' : '#9aa0a8';
 }
-
 function toggleWisp() {
   const panel = document.getElementById('wisp-panel');
   const isOpen = panel.classList.contains('open');
@@ -1211,7 +787,6 @@ function toggleWisp() {
   if(isOpen) panel.classList.remove('open');
   else { panel.classList.add('open'); const val = document.getElementById('wisp-status-val'); if(val) val.textContent = wispConnected ? 'Connected' : 'Disconnected'; if(!wispConnected) connectWisp(); }
 }
-
 function testWisp() {
   const latEl = document.getElementById('wisp-latency');
   if(latEl) latEl.textContent = '…';
@@ -1479,7 +1054,6 @@ function fmNewFolder(){
     fmRender();
   });
 }
-
 function fmSaveToDrive(){
   try {
     const tree = getFSTree();
@@ -1725,15 +1299,15 @@ const SETTINGS_PAGES={
   'Privacy':()=>`<div class="settings-group"><h3>Privacy &amp; Cookies</h3>
     <div class="settings-row"><div><label>Cookie Storage</label><small>localStorage for files and settings</small></div><span style="font-size:12px;color:${localStorage.getItem(OPT_COOKIES_KEY)==='accepted'?'var(--mint-green)':'#febc2e'}">${localStorage.getItem(OPT_COOKIES_KEY)==='accepted'?'Accepted':'Not accepted'}</span></div>
     <div class="settings-row"><div><label>Session Storage</label><small>Current login session</small></div><div class="toggle on" data-key="session-storage"></div></div>
-    <div class="settings-row"><div><label>Clear All Data</label><small>Removes all files, settings, accounts</small></div><button class="settings-btn" onclick="if(confirm('This will delete ALL data including your account. Continue?')){localStorage.clear();location.reload();}">Clear Data</button></div>
+    <div class="settings-row"><div><label>Clear All Data</label><small>Removes all files and settings</small></div><button class="settings-btn" onclick="if(confirm('This will delete ALL data. Continue?')){localStorage.clear();location.reload();}">Clear Data</button></div>
     <div style="margin-top:16px"><button class="settings-btn" onclick="acceptCookies()">Accept Cookies</button> &nbsp;<button class="settings-btn" style="color:#ff7070;border-color:rgba(255,112,112,0.3)" onclick="declineCookies()">Decline Cookies</button></div>
   </div>`,
-  'Account':()=>{const u=currentUser||{name:'Unknown',type:'local',email:''};const isGoogle=u.type==='google';return `<div class="settings-group"><h3>Account</h3>
-    <div class="account-avatar-row"><div class="account-avatar-big">${u.avatar?`<img src="${u.avatar}">`:(u.name||'?')[0].toUpperCase()}</div>
-    <div class="account-info"><div class="acc-name">${u.name}</div>${u.email?`<div class="acc-email">${u.email}</div>`:''}<div class="acc-type">${isGoogle?'Google Account':'Local Account'}</div></div></div>
-    <div class="settings-row"><div><label>Storage</label></div><span style="font-size:12px;color:var(--text-muted)">${isGoogle?'Google (local mirror)':'Browser localStorage'}</span></div>
-    <div style="margin-top:16px;display:flex;gap:8px"><button class="settings-btn" onclick="lockScreen()">Lock Screen</button><button class="settings-btn" style="color:#ff7070;border-color:rgba(255,112,112,0.3)" onclick="doLogout()">Sign Out</button></div>
-  </div>`}
+  'Account':()=>`<div class="settings-group"><h3>Account</h3>
+    <div class="account-avatar-row"><div class="account-avatar-big">U</div>
+    <div class="account-info"><div class="acc-name">User</div><div class="acc-type">Local Account (Guest)</div></div></div>
+    <div class="settings-row"><div><label>Storage</label></div><span style="font-size:12px;color:var(--text-muted)">Browser localStorage</span></div>
+    <div style="margin-top:16px;display:flex;gap:8px"><button class="settings-btn" onclick="lockScreen()">Lock Screen</button></div>
+  </div>`
 };
 
 function applyRounding(v){document.documentElement.style.setProperty('--win-border-radius',v+'px');}
@@ -1797,6 +1371,7 @@ function buildMenuList(filter=''){
       `<svg viewBox="0 0 24 24" fill="${a.svg.color}" width="18" height="18"><path d="${a.svg.path}"/></svg>`;
     return `<div class="menu-app-item" onclick="openApp('${a.id}');toggleMenu()">${icon}<span>${a.label}</span></div>`;
   }).join('');
+  buildInstalledAppsInMenu();
 }
 function filterMenu(v){buildMenuList(v);}
 function toggleMenu(){
@@ -1823,7 +1398,6 @@ function closePinnedApp(id) {
 }
 
 function openApp(id){
-  if(!currentUser)return;
   const configs={
     files:{title:'Files',w:720,h:480,icon:'M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z',fn:filesContent},
     terminal:{title:'Terminal',w:660,h:420,icon:'https://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Terminal-Pc-104-icon.png',fn:()=>'<iframe src="https://optimisterminal.up.railway.app/" style="width:100%;height:100%;border:none;background:transparent"></iframe>'},
@@ -1845,7 +1419,7 @@ function openApp(id){
 }
 
 function saveOSState(){
-  if(!osStateLoaded||!currentUser)return;
+  if(!osStateLoaded)return;
   const open=[];
   Object.keys(windows).forEach(id=>{
     const win=document.getElementById('win-'+id);if(!win)return;
@@ -1854,12 +1428,11 @@ function saveOSState(){
     const geom=isMax?(windows[id]?.savedPos||null):{left:win.style.left,top:win.style.top,width:win.style.width,height:win.style.height};
     open.push({id,maximized:isMax,minimized:isMin,geom});
   });
-  try{localStorage.setItem(OPT_WIN_KEY+'.'+(currentUser.storageKey||currentUser.name),JSON.stringify(open));}catch{}
+  try{localStorage.setItem(OPT_WIN_KEY+'.User',JSON.stringify(open));}catch{}
 }
 function restoreOSWindows(){
-  if(!currentUser)return;
   let saved=null;
-  try{saved=JSON.parse(localStorage.getItem(OPT_WIN_KEY+'.'+(currentUser.storageKey||currentUser.name))||'null');}catch{}
+  try{saved=JSON.parse(localStorage.getItem(OPT_WIN_KEY+'.User')||'null');}catch{}
   if(Array.isArray(saved)&&saved.length){
     saved.forEach(s=>{
       try{
@@ -1886,7 +1459,6 @@ document.addEventListener('keydown',e=>{
   if(e.ctrlKey&&e.key==='F1'){e.preventDefault();openApp('files');}
   if(e.ctrlKey&&e.key==='F2'){e.preventDefault();openApp('terminal');}
   if(e.ctrlKey&&e.key==='F3'){e.preventDefault();openApp('editor');}
-  if(e.key==='Super'||e.key==='Meta'){e.preventDefault();toggleMenu();}
   if(e.altKey&&e.key==='F4'&&focused){e.preventDefault();closeWindow(focused);}
   if(e.ctrlKey&&e.key==='l'){e.preventDefault();lockScreen();}
 });
@@ -1896,154 +1468,88 @@ new MutationObserver(()=>{
   if(sc&&!sc.dataset.settingsWired){sc.dataset.settingsWired='1';sc.addEventListener('change',saveSettingsPage);}
 }).observe(document.body,{childList:true,subtree:true});
 
-// =============================================
-// STORE INTEGRATION — installed apps registry
-// =============================================
+// ── Store / installed apps ─────────────────────────────────────────────────
 const OPT_CUSTOM_APPS_KEY = 'optimistic.custom.apps';
-
 function getCustomApps() {
   try { return JSON.parse(localStorage.getItem(OPT_CUSTOM_APPS_KEY) || '[]'); } catch { return []; }
 }
-
 function openCustomApp(appId) {
   const apps = getCustomApps();
   const app = apps.find(a => a.id === appId);
   if (!app) return;
-  if (windows[appId]) {
-    const w = document.getElementById('win-' + appId);
-    w?.classList.remove('minimized');
-    focusWindow(appId);
-    return;
-  }
-  const iframeSrc = app.iframeUrl || app.url;
-  const x = Math.min(60 + (winOffsetX % 180), window.innerWidth - 900 - 20);
-  const y = Math.min(40 + (winOffsetY % 140), window.innerHeight - 640 - 60);
-  winOffsetX += 28; winOffsetY += 28;
-  createWindow(
-    appId, app.label, 900, 640, x, y,
-    () => `<iframe src="${iframeSrc}" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write; autoplay; payment"></iframe>`,
-    app.icon, true
-  );
-  // Add delete button to titlebar after window is created
-  setTimeout(() => {
-    const tb = document.getElementById('tb-drag-' + appId);
-    if (!tb) return;
-    const delBtn = document.createElement('button');
-    delBtn.className = 'win-btn';
-    delBtn.style.cssText = 'background:#ff5f57;width:13px;height:13px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:4px;opacity:0.6;transition:opacity 0.15s;';
-    delBtn.innerHTML = '<svg width="7" height="7" viewBox="0 0 8 8"><path d="M1 1l6 6M7 1L1 7" stroke="rgba(100,0,0,0.7)" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
-    delBtn.onmouseenter = () => delBtn.style.opacity = '1';
-    delBtn.onmouseleave = () => delBtn.style.opacity = '0.6';
-    delBtn.onclick = (e) => { e.stopPropagation(); uninstallApp(appId); };
-    const controls = tb.querySelector('.win-controls');
-    if (controls) controls.appendChild(delBtn);
-  }, 50);
+  if (windows[appId]) { document.getElementById('win-'+appId)?.classList.remove('minimized'); focusWindow(appId); return; }
+  const x = Math.min(60+(winOffsetX%180), window.innerWidth-900-20);
+  const y = Math.min(40+(winOffsetY%140), window.innerHeight-640-60);
+  winOffsetX+=28; winOffsetY+=28;
+  createWindow(appId, app.label, 900, 640, x, y,
+    ()=>`<iframe src="${app.iframeUrl||app.url}" style="width:100%;height:100%;border:none;background:transparent" allow="fullscreen; clipboard-read; clipboard-write; autoplay; payment"></iframe>`,
+    app.icon, true);
+  setTimeout(()=>{
+    const tb=document.getElementById('tb-drag-'+appId);if(!tb)return;
+    const delBtn=document.createElement('button');
+    delBtn.style.cssText='background:#ff5f57;width:13px;height:13px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:4px;opacity:0.6;transition:opacity 0.15s;';
+    delBtn.innerHTML='<svg width="7" height="7" viewBox="0 0 8 8"><path d="M1 1l6 6M7 1L1 7" stroke="rgba(100,0,0,0.7)" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
+    delBtn.onmouseenter=()=>delBtn.style.opacity='1'; delBtn.onmouseleave=()=>delBtn.style.opacity='0.6';
+    delBtn.onclick=(e)=>{e.stopPropagation();uninstallApp(appId);};
+    tb.querySelector('.win-controls')?.appendChild(delBtn);
+  },50);
   document.getElementById('start-menu')?.classList.remove('open');
 }
-
 function uninstallApp(appId) {
-  if (!confirm('Uninstall this app?')) return;
-  // Remove from installed registry
-  const apps = getCustomApps();
-  const updated = apps.filter(a => a.id !== appId);
-  localStorage.setItem(OPT_CUSTOM_APPS_KEY, JSON.stringify(updated));
-  // Remove from localStorage installed key
-  try {
-    const installed = JSON.parse(localStorage.getItem('optimistic.store.installed') || '{}');
-    delete installed[appId];
-    localStorage.setItem('optimistic.store.installed', JSON.stringify(installed));
-  } catch {}
-  // Close window if open
-  if (windows[appId]) closeWindow(appId);
-  // Remove desktop icon
+  if(!confirm('Uninstall this app?'))return;
+  const apps=getCustomApps();
+  localStorage.setItem(OPT_CUSTOM_APPS_KEY, JSON.stringify(apps.filter(a=>a.id!==appId)));
+  try{const inst=JSON.parse(localStorage.getItem('optimistic.store.installed')||'{}');delete inst[appId];localStorage.setItem('optimistic.store.installed',JSON.stringify(inst));}catch{}
+  if(windows[appId])closeWindow(appId);
   document.querySelector(`.desktop-icon[data-appid="${appId}"]`)?.remove();
-  // Remove from start menu
   buildInstalledAppsInMenu();
-  showNotif('Store', 'App uninstalled.');
+  showNotif('Store','App uninstalled.');
 }
-
 function buildInstalledAppsInMenu() {
-  const apps = getCustomApps();
-  const list = document.getElementById('menu-apps-list');
-  if (!list) return;
-  // Remove previously injected items
-  list.querySelectorAll('.installed-app-item, .installed-sep').forEach(el => el.remove());
-  if (!apps.length) return;
-  // Separator
-  const sep = document.createElement('div');
-  sep.className = 'installed-sep';
-  sep.style.cssText = 'height:1px;background:rgba(135,184,127,0.07);margin:4px 8px';
-  list.appendChild(sep);
-  // Label
-  const lbl = document.createElement('div');
-  lbl.className = 'installed-sep';
-  lbl.style.cssText = 'padding:4px 8px 2px;font-size:10px;color:#3a5a3a;text-transform:uppercase;letter-spacing:0.5px;';
-  lbl.textContent = 'Installed';
-  list.appendChild(lbl);
-  // App items
-  apps.forEach(app => {
-    const item = document.createElement('div');
-    item.className = 'menu-app-item installed-app-item';
-    item.innerHTML = `<img src="${app.icon}" width="18" height="18" style="object-fit:contain;flex-shrink:0;border-radius:4px" onerror="this.style.display='none'"><span>${app.label}</span>`;
-    item.onclick = () => { openCustomApp(app.id); toggleMenu(); };
-    // Double-click to uninstall
-    item.ondblclick = (e) => { e.stopPropagation(); uninstallApp(app.id); };
+  const apps=getCustomApps();
+  const list=document.getElementById('menu-apps-list');
+  if(!list)return;
+  list.querySelectorAll('.installed-app-item,.installed-sep').forEach(el=>el.remove());
+  if(!apps.length)return;
+  const sep=document.createElement('div');sep.className='installed-sep';sep.style.cssText='height:1px;background:rgba(135,184,127,0.07);margin:4px 8px';list.appendChild(sep);
+  const lbl=document.createElement('div');lbl.className='installed-sep';lbl.style.cssText='padding:4px 8px 2px;font-size:10px;color:#3a5a3a;text-transform:uppercase;letter-spacing:0.5px;';lbl.textContent='Installed';list.appendChild(lbl);
+  apps.forEach(app=>{
+    const item=document.createElement('div');item.className='menu-app-item installed-app-item';
+    item.innerHTML=`<img src="${app.icon}" width="18" height="18" style="object-fit:contain;flex-shrink:0;border-radius:4px" onerror="this.style.display='none'"><span>${app.label}</span>`;
+    item.onclick=()=>{openCustomApp(app.id);toggleMenu();};
+    item.ondblclick=(e)=>{e.stopPropagation();uninstallApp(app.id);};
     list.appendChild(item);
   });
 }
-
 function addInstalledAppDesktopIcon(app) {
-  const desktopIcons = document.getElementById('desktop-icons');
-  if (!desktopIcons) return;
-  if (desktopIcons.querySelector(`[data-appid="${app.id}"]`)) return;
-  const icon = document.createElement('div');
-  icon.className = 'desktop-icon';
-  icon.dataset.appid = app.id;
-  icon.ondblclick = () => openCustomApp(app.id);
-  // Right-click to uninstall
-  icon.oncontextmenu = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    uninstallApp(app.id);
-  };
-  icon.innerHTML = `<img src="${app.icon}" width="40" height="40" style="object-fit:contain;border-radius:10px;background:rgba(0,0,0,0.3);padding:4px" onerror="this.style.display='none'"><span>${app.label}</span>`;
-  desktopIcons.appendChild(icon);
+  const di=document.getElementById('desktop-icons');if(!di)return;
+  if(di.querySelector(`[data-appid="${app.id}"]`))return;
+  const icon=document.createElement('div');icon.className='desktop-icon';icon.dataset.appid=app.id;
+  icon.ondblclick=()=>openCustomApp(app.id);
+  icon.oncontextmenu=(e)=>{e.preventDefault();e.stopPropagation();uninstallApp(app.id);};
+  icon.innerHTML=`<img src="${app.icon}" width="40" height="40" style="object-fit:contain;border-radius:10px;background:rgba(0,0,0,0.3);padding:4px" onerror="this.style.display='none'"><span>${app.label}</span>`;
+  di.appendChild(icon);
 }
-
-function restoreInstalledAppsDesktopIcons() {
-  getCustomApps().forEach(app => addInstalledAppDesktopIcon(app));
-}
-
-// Listen for messages from the store iframe
-window.addEventListener('message', (e) => {
-  if (!e.data || typeof e.data !== 'object') return;
-  if (e.data.type === 'app-installed') {
-    const app = e.data.app;
-    showNotif('Store', `${app.label} installed! Find it in Start Menu & desktop.`);
-    buildInstalledAppsInMenu();
-    addInstalledAppDesktopIcon(app);
-  }
-  if (e.data.type === 'open-app') {
-    openCustomApp(e.data.appId);
-  }
+window.addEventListener('message',(e)=>{
+  if(!e.data||typeof e.data!=='object')return;
+  if(e.data.type==='app-installed'){showNotif('Store',`${e.data.app.label} installed!`);buildInstalledAppsInMenu();addInstalledAppDesktopIcon(e.data.app);}
+  if(e.data.type==='open-app')openCustomApp(e.data.appId);
 });
 
-// Patch enterDesktop to restore installed apps on load
-const _origEnterDesktop = enterDesktop;
-enterDesktop = function() {
-  _origEnterDesktop.apply(this, arguments);
-  setTimeout(() => {
-    buildInstalledAppsInMenu();
-    restoreInstalledAppsDesktopIcons();
-  }, 300);
-};
-
-// Patch buildMenuList to always show installed apps
-const _origBuildMenuList = buildMenuList;
-buildMenuList = function(filter) {
-  _origBuildMenuList.apply(this, arguments);
-  buildInstalledAppsInMenu();
-};
+// ── Boot directly into desktop ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  updateUserUI();
+  loadWallpaper();
+  document.getElementById('desktop').classList.add('loaded');
+  restoreOSWindows();
+  osStateLoaded = true;
+  getCustomApps().forEach(app => addInstalledAppDesktopIcon(app));
+  buildMenuList();
+  initBattery();
+  connectWisp();
+  checkCookieBanner();
+  setTimeout(() => showNotif('Welcome to Optimistic', 'Hello! '), 500);
+});
 </script>
 </body>
 </html>
