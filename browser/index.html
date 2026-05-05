@@ -71,7 +71,26 @@
   </div>
 
   <div id="toast-message" class="toast-msg"></div>
-
+<script>
+const _origFetch = window.fetch;
+window.fetch = async function(...args) {
+  const res = await _origFetch.apply(this, args);
+  const url = typeof args[0] === 'string' ? args[0] : args[0]?.url || '';
+  if (url.includes('scramjet.all.js')) {
+    const text = await res.clone().text();
+    const patched = text.replace(
+      't = globalThis.frameElement;',
+      't = null; try { t = globalThis.frameElement; } catch(_) {}'
+    );
+    return new Response(patched, {
+      status: res.status,
+      statusText: res.statusText,
+      headers: res.headers
+    });
+  }
+  return res;
+};
+</script>
   <script src="app.js"></script>
 </body>
 </html>
