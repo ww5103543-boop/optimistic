@@ -62,11 +62,6 @@ async function getProxied(url) {
   return module.getProxied(url);
 }
 
-function getProxiedSync(url) {
-  if (!window.proxyReady() || !window.proxyModule()?.getProxiedSync) throw new Error("Proxy not ready");
-  return window.proxyModule().getProxiedSync(url);
-}
-
 async function setWisp(url) {
   if (!window.proxyReady()) await window.initProxy();
   const module = window.proxyModule();
@@ -193,34 +188,31 @@ function closeTab(id) {
 async function doNavigate(tab, destUrl) {
   if (!destUrl) return;
 
-  let proxied = null;
-  if (window.proxyReady() && getProxiedSync) {
-    try { proxied = getProxiedSync(destUrl); } catch (_) {}
-  }
-
-  if (proxied) {
-    tab.proxiedUrl = proxied;
-    tab.destUrl = destUrl;
-    tab.frame.src = proxied;
-    tab.newtab.classList.remove('active');
-    if (activeTabId === tab.id) tab.frame.classList.add('active');
-  }
+  // Reset frame state
+  tab.frame.onload = null;
+  tab.frame.onerror = null;
 
   tab.loadState = 'loading';
-  tab.title = 'Loading…';
+  tab.title = 'Loading\u2026';
   tab.displayUrl = destUrl;
   if (activeTabId === tab.id) urlInput.value = destUrl;
   renderTabs();
 
-  if (proxied) {
-    tab.frame.onload = onFrameLoad;
-    tab.frame.onerror = onFrameError;
-    return;
-  }
-
+  // Always go fully async — never use the sync shortcut.
+  // This ensures Scramjet is fully initialized inside the iframe
+  // before any proxied page scripts execute, preventing the
+  // $scramjet$pushsourcemap flood and cross-origin SecurityError.
   if (!window.proxyReady()) {
     showToast('Initializing proxy...', 2000);
-    await window.initProxy();
+    try {
+      await window.initProxy();
+    } catch (e) {
+      showToast('Proxy failed to load', 3000);
+      tab.loadState = 'error';
+      tab.title = 'Error';
+      renderTabs();
+      return;
+    }
   }
 
   if (!window.proxyReady()) {
@@ -231,6 +223,7 @@ async function doNavigate(tab, destUrl) {
     return;
   }
 
+  let proxied;
   try {
     proxied = await getProxied(destUrl);
   } catch (err) {
@@ -243,19 +236,16 @@ async function doNavigate(tab, destUrl) {
 
   if (!proxied) {
     showToast('Proxy returned empty', 3000);
+    tab.loadState = 'error';
+    tab.title = 'Error';
+    renderTabs();
     return;
   }
 
   tab.proxiedUrl = proxied;
   tab.destUrl = destUrl;
 
-  tab.frame.onload = onFrameLoad;
-  tab.frame.onerror = onFrameError;
-  tab.frame.src = proxied;
-  tab.newtab.classList.remove('active');
-  if (activeTabId === tab.id) tab.frame.classList.add('active');
-
-  function onFrameLoad() {
+  tab.frame.onload = function onFrameLoad() {
     tab.loadState = 'loaded';
     tab.retryCount = 0;
     let resolvedDisplay = destUrl;
@@ -263,22 +253,26 @@ async function doNavigate(tab, destUrl) {
       let href = tab.frame.contentWindow?.location?.href || '';
       let match = href.match(/\/scramjet\/(.+)$/);
       if (match) resolvedDisplay = decodeURIComponent(match[1]);
-    } catch(_) {}
+    } catch (_) {}
     tab.displayUrl = resolvedDisplay;
     try {
       tab.title = new URL(resolvedDisplay).hostname.replace(/^www\./, '') || 'Page';
-    } catch(_) {
+    } catch (_) {
       tab.title = 'Page';
     }
     if (activeTabId === tab.id) urlInput.value = tab.displayUrl;
     renderTabs();
-  }
+  };
 
-  function onFrameError() {
+  tab.frame.onerror = function onFrameError() {
     tab.loadState = 'error';
     tab.title = 'Error';
     renderTabs();
-  }
+  };
+
+  tab.newtab.classList.remove('active');
+  if (activeTabId === tab.id) tab.frame.classList.add('active');
+  tab.frame.src = proxied;
 }
 
 async function navigateTab(tabId, raw) {
@@ -297,7 +291,34 @@ function createTab(initialUrl) {
 
   let frame = document.createElement('iframe');
   frame.className = 'browser-frame';
-  frame.setAttribute('allow', 'fullscreen; microphone; camera; autoplay; clipboard-read; clipboard-write; accelerometer; gyroscope; payment; usb; xr-spatial-tracking');
+
+  // Full allow list to silence permissions policy violations
+  frame.setAttribute('allow', [
+    'fullscreen',
+    'microphone',
+    'camera',
+    'autoplay',
+    'clipboard-read',
+    'clipboard-write',
+    'accelerometer',
+    'gyroscope',
+    'payment',
+    'usb',
+    'xr-spatial-tracking'
+  ].join('; '));
+
+  // sandbox: allow-same-origin is required so Scramjet can access
+  // its service worker / shared globals inside the iframe context.
+  frame.setAttribute('sandbox', [
+    'allow-scripts',
+    'allow-same-origin',
+    'allow-forms',
+    'allow-popups',
+    'allow-modals',
+    'allow-top-navigation-by-user-activation',
+    'allow-downloads'
+  ].join(' '));
+
   contentDiv.appendChild(frame);
 
   let newtabDiv = document.createElement('div');
@@ -334,13 +355,13 @@ function createTab(initialUrl) {
 function toggleFullscreen() {
   if (!isFullscreen) {
     document.body.classList.add('fullscreen-mode');
-    fullscreenBtn.textContent = '✕';
+    fullscreenBtn.textContent = '\u2715';
     fullscreenBtn.title = 'Exit Fullscreen';
     isFullscreen = true;
     showToast('Fullscreen mode enabled', 1500);
   } else {
     document.body.classList.remove('fullscreen-mode');
-    fullscreenBtn.textContent = '⛶';
+    fullscreenBtn.textContent = '\u26F6';
     fullscreenBtn.title = 'Fullscreen';
     isFullscreen = false;
     showToast('Fullscreen mode disabled', 1500);
@@ -350,7 +371,7 @@ function toggleFullscreen() {
 function exitFullscreen() {
   if (isFullscreen) {
     document.body.classList.remove('fullscreen-mode');
-    fullscreenBtn.textContent = '⛶';
+    fullscreenBtn.textContent = '\u26F6';
     fullscreenBtn.title = 'Fullscreen';
     isFullscreen = false;
     showToast('Fullscreen mode disabled', 1500);
@@ -358,8 +379,8 @@ function exitFullscreen() {
 }
 
 function updateEngineUI() {
-  duckCheck.textContent = searchEngine === 'duckduckgo' ? '✓' : '';
-  braveCheck.textContent = searchEngine === 'brave' ? '✓' : '';
+  duckCheck.textContent = searchEngine === 'duckduckgo' ? '\u2713' : '';
+  braveCheck.textContent = searchEngine === 'brave' ? '\u2713' : '';
   let ph = getSearchPlaceholder();
   urlInput.placeholder = ph;
   document.querySelectorAll('.nt-search').forEach(el => { el.placeholder = ph; });
@@ -375,12 +396,12 @@ newTabBtn.addEventListener('click', () => createTab());
 
 backBtn.addEventListener('click', () => {
   let tab = tabs.find(t => t.id === activeTabId);
-  try { tab?.frame?.contentWindow?.history.back(); } catch(_) {}
+  try { tab?.frame?.contentWindow?.history.back(); } catch (_) {}
 });
 
 forwardBtn.addEventListener('click', () => {
   let tab = tabs.find(t => t.id === activeTabId);
-  try { tab?.frame?.contentWindow?.history.forward(); } catch(_) {}
+  try { tab?.frame?.contentWindow?.history.forward(); } catch (_) {}
 });
 
 reloadBtn.addEventListener('click', () => {
