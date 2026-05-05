@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-  (function() {
-    if (window.self !== window.top) {
-      try { void window.parent.location.href; } catch(e) {
-        Object.defineProperty(window, 'parent', { get: () => window.self, configurable: true });
-        Object.defineProperty(window, 'top', { get: () => window.self, configurable: true });
-        Object.defineProperty(window, 'opener', { get: () => null, configurable: true });
-      }
+<script>
+(function() {
+  if (window.self !== window.top) {
+    try { void window.parent.location.href; } catch(e) {
+      ['parent', 'top', 'opener'].forEach(function(prop) {
+        try {
+          Object.defineProperty(window, prop, {
+            get: prop === 'opener' ? function() { return null; } : function() { return window.self; },
+            configurable: true
+          });
+        } catch(_) { /* browser blocked it, safe to ignore */ }
+      });
     }
-  })();
-  </script>
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Optimistic</title>
