@@ -307,17 +307,11 @@ function createTab(initialUrl) {
     'xr-spatial-tracking'
   ].join('; '));
 
-  // sandbox: allow-same-origin is required so Scramjet can access
-  // its service worker / shared globals inside the iframe context.
-  frame.setAttribute('sandbox', [
-    'allow-scripts',
-    'allow-same-origin',
-    'allow-forms',
-    'allow-popups',
-    'allow-modals',
-    'allow-top-navigation-by-user-activation',
-    'allow-downloads'
-  ].join(' '));
+  // NOTE: Do NOT add a sandbox attribute here.
+  // Scramjet's bare-mux transport uses a SharedWorker to pass MessagePorts.
+  // Any sandbox attribute — even with allow-same-origin — blocks SharedWorker
+  // access inside iframes, causing bare-mux to fail and breaking Scramjet
+  // entirely ($scramjet$pushsourcemap flood, SecurityError, nothing loads).
 
   contentDiv.appendChild(frame);
 
