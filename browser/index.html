@@ -74,10 +74,10 @@
 <script>
 const _origFetch = window.fetch;
 window.fetch = async function(...args) {
+  const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || '');
   const res = await _origFetch.apply(this, args);
-  const url = typeof args[0] === 'string' ? args[0] : args[0]?.url || '';
   if (url.includes('scramjet.all.js')) {
-    const text = await res.clone().text();
+    const text = await res.text();
     const patched = text.replace(
       't = globalThis.frameElement;',
       't = null; try { t = globalThis.frameElement; } catch(_) {}'
@@ -85,7 +85,7 @@ window.fetch = async function(...args) {
     return new Response(patched, {
       status: res.status,
       statusText: res.statusText,
-      headers: res.headers
+      headers: { 'Content-Type': 'application/javascript' }
     });
   }
   return res;
