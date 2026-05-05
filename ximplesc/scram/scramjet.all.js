@@ -1509,15 +1509,14 @@
             !(i.pX in globalThis))
           ) {
             (0, n.Ec)();
-let e = new s.ScramjetClient(globalThis),
-  t = null;
-try { t = globalThis.frameElement; } catch(_) {}
-t &&
-  !t.name &&
-  (t.name = `${Array(8)
-    .fill(0)
-    .map(() => Math.floor(36 * Math.random()).toString(36))
-    .join("")}`),
+            let e = new s.ScramjetClient(globalThis),
+              t = null; try { t = globalThis.frameElement; } catch(_) {}
+            t &&
+              !t.name &&
+              (t.name = `${Array(8)
+                .fill(0)
+                .map(() => Math.floor(36 * Math.random()).toString(36))
+                .join("")}`),
               globalThis.COOKIE && e.loadcookies(globalThis.COOKIE),
               e.hook(),
               f && new a.ScramjetServiceWorkerRuntime(e).hook();
