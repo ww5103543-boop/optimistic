@@ -11,6 +11,8 @@ const scramjet = new ScramjetServiceWorker({
 
 const CONFIG = {
     blocked: [
+        "pornhub.com",
+        "xvideos.com",
         "youtube.com/get_video_info?*adformat=*",
         "youtube.com/api/stats/ads/*",
         "youtube.com/pagead/*",
